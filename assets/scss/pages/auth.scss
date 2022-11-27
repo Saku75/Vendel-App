@@ -1,0 +1,39 @@
+.page-auth {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 1rem;
+
+	h2 {
+		font-weight: var(--font-weight-regular);
+		text-align: center;
+	}
+
+	form {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 1rem;
+		width: 100%;
+
+		& > div.form-group {
+			width: 100%;
+		}
+
+		button {
+			width: 100%;
+			border: 1px solid var(--color-success-100);
+			background-color: var(--color-success-60);
+			padding: 0.5rem 0.25rem;
+			border-radius: 0.25rem;
+			transform: none;
+			font-weight: var(--font-weight-bold);
+
+			&:hover,
+			&:focus-visible {
+				color: var(--color-light);
+				background-color: var(--color-success-100);
+			}
+		}
+	}
+}
