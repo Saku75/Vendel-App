@@ -1,0 +1,8 @@
+// Base Files
+@import "variables", "utilities", "base";
+
+// Main Components
+@import "components/header", "components/navigation", "components/footer";
+
+// Pages
+@import "pages/home", "pages/auth";
