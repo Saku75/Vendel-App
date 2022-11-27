@@ -1,24 +1,109 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="da" class="dark">
 	<head>
+		<link
+			rel="preload"
+			href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Inter:wght@400;700&display=swap"
+			as="style" />
+		<link
+			rel="preload"
+			href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,200&display=swap"
+			as="style" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
 		<meta charset="UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Vendel.dk</title>
 
 		<script src="router.js" async></script>
+
+		<link
+			href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Inter:wght@400;700&display=swap"
+			rel="stylesheet" />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,200&display=swap"
+			rel="stylesheet" />
+
+		<link rel="stylesheet" href="assets/main.css" />
 	</head>
 	<body>
 		<header>
-			<h1>Vendel.dk</h1>
+			<div class="width-container-xl">
+				<button
+					id="languageSwitcher"
+					aria-label="Skift sidens sprog"
+					data-lang-id="btnLanguageSwitcher">
+					<img src="/assets/img/language-danish.svg" alt="DK flag" />
+				</button>
+				<h1><a class="routerLink" href="/home">Vendel.dk</a></h1>
+				<button id="themeSwitcher" aria-label="Skift sidens tema" data-lang-id="btnThemeSwitcher">
+					<span class="icon-lg"> light_mode </span>
+				</button>
+			</div>
 		</header>
 		<nav>
-			<ul>
-				<li><a class="navLink" href="/home">Home</a></li>
-				<li><a class="navLink" href="/about">About</a></li>
-				<li><a class="navLink" href="/contact">Contact</a></li>
-			</ul>
+			<div class="width-container-xl">
+				<ul class="right">
+					<li>
+						<a class="routerLink" href="/home">
+							<span class="icon-md"> home </span>
+							<span data-lang-id="linkHome">Forside</span>
+						</a>
+					</li>
+					<li>
+						<a class="routerLink" href="/wishlist">
+							<span class="icon-md"> redeem </span>
+							<span data-lang-id="linkWishlist">Ønskelister</span>
+						</a>
+					</li>
+					<li>
+						<a class="routerLink hidden" href="/admin">
+							<span class="icon-md"> admin_panel_settings </span>
+							<span data-lang-id="linkAdmin">Admin</span>
+						</a>
+					</li>
+				</ul>
+				<button id="navMenu">
+					<span class="icon-md"> menu </span>
+					<span data-lang-id="btnNavMenu">Menu</span>
+				</button>
+				<ul class="left">
+					<li>
+						<a class="routerLink hidden" href="/profile">
+							<span class="icon-md"> person </span>
+							<span data-lang-id="linkProfile">Profil</span>
+						</a>
+					</li>
+					<li>
+						<a class="routerLink" href="/login">
+							<span class="icon-md"> login </span>
+							<span data-lang-id="linkLogin">Log ind</span>
+						</a>
+					</li>
+					<li>
+						<a class="routerLink" href="/signup">
+							<span class="icon-md"> person_add </span>
+							<span data-lang-id="linkSignup">Opret Bruger</span>
+						</a>
+					</li>
+					<li>
+						<a class="routerLink hidden" href="/logout">
+							<span class="icon-md"> logout </span>
+							<span data-lang-id="linkLogout">Log ud</span>
+						</a>
+					</li>
+				</ul>
+			</div>
 		</nav>
 		<main id="app"></main>
+		<footer>
+			<small>
+				<span class="icon-sm"> copyright </span>
+				<span data-lang-id="copyright">
+					2022 - Lukas Vendel Mann - Alle Rettigheder Forbeholdes
+				</span>
+			</small>
+		</footer>
 	</body>
 </html>
