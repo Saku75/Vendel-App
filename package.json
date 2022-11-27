@@ -1,0 +1,25 @@
+{
+	"name": "vendel-app",
+	"version": "2.0.0",
+	"description": "",
+	"main": "index.html",
+	"scripts": {
+		"build": "tsc && sass assets/scss/main.scss assets/main.css",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Saku75/Vendel-App.git"
+	},
+	"keywords": [],
+	"author": "Lukas Vendel Mann",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/Saku75/Vendel-App/issues"
+	},
+	"homepage": "https://github.com/Saku75/Vendel-App#readme",
+	"devDependencies": {
+		"sass": "^1.56.1",
+		"typescript": "^4.9.3"
+	}
+}
