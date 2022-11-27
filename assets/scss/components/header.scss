@@ -1,0 +1,30 @@
+body > header {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	padding: 1rem clamp(1rem, 4vw, 1.5rem);
+	background-color: var(--color-base-2);
+
+	& > div[class*="width-container-"] {
+		width: 100%;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+
+	h1 {
+		font-size: var(--font-size-xl);
+		font-weight: var(--font-weight-bold);
+		font-family: var(--font-family-secondary);
+	}
+
+	button {
+		border-radius: 10rem;
+		overflow: hidden;
+
+		img {
+			width: 2rem;
+			height: 2rem;
+		}
+	}
+}
