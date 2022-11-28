@@ -1,82 +1,126 @@
 class Router {
-	private rootElement: HTMLElement;
-	private routes: Array<{ name: string; route: string; component: string; script?: boolean }>;
-	private defaultRoute: string;
-	private navLinks: NodeListOf<Element>;
-	private currentRoute: string;
+	private _rootElementID: string;
+	private _rootElement: HTMLElement | null = null;
+	private _routes: Array<{ route: string; component: string; script?: boolean }>;
+	private _defaultRoute: string;
+	private _currentRoute: string;
+	private _routerLinkClass: string;
+	private _callBackFunction: (pageContent: Document | HTMLElement, routeData?: Array<any>) => void =
+		() => {};
 
 	constructor(
-		rootElement: HTMLElement,
-		routes: Array<{ name: string; route: string; component: string; script?: boolean }>,
+		rootElementID: string,
+		routes: Array<{ route: string; component: string; script?: boolean }>,
 		defaultRoute: string,
-		navLinks: NodeListOf<Element>
+		routerLinkClass: string,
+		callBackFunction?: (pageContent: Object, routeData?: Array<any>) => void
 	) {
-		this.rootElement = rootElement;
-		this.routes = routes;
-		this.defaultRoute = defaultRoute;
-		this.currentRoute = defaultRoute;
-		this.navLinks = navLinks;
-
-		this.render();
-		this.setupNavLinks();
-	}
-
-	// Method: navigate
-	// Navigates to a route
-	private navigate(route: string): void {
-		this.currentRoute = route;
-		window.history.pushState({}, "", route);
-		this.render();
-	}
-
-	// Method: render
-	// Renders the current route
-	private render(): void {
-		let route = this.routes.find((route) => route.name === this.currentRoute);
-
-		if (route) {
-			fetch(`/components/${route.component}.html`)
-				.then((response) => response.text())
-				.then((html) => {
-					this.rootElement.innerHTML = html;
-				});
+		if (!rootElementID) {
+			throw new Error("rootElementID is required");
 		}
+		if (!routes) {
+			throw new Error("routes is required");
+		}
+		if (!defaultRoute) {
+			throw new Error("defaultRoute is required");
+		}
+		if (!routerLinkClass) {
+			throw new Error("routerLinks is required");
+		}
+
+		this._rootElementID = rootElementID;
+		this._routes = routes;
+		this._defaultRoute = defaultRoute;
+		this._currentRoute = window.location.pathname;
+		this._routerLinkClass = routerLinkClass;
+		if (callBackFunction) {
+			this._callBackFunction = callBackFunction;
+		}
+
+		document.addEventListener("DOMContentLoaded", () => {
+			this._rootElement = document.getElementById(this._rootElementID);
+			this._render();
+			this._setupRouterLinks(document);
+		});
 	}
 
-	// Method: navLinks
-	// Adds click event listeners to all nav links
-	private setupNavLinks(): void {
-		this.navLinks.forEach((link) => {
+	// Method: _getRouterLinks
+	// Gets all router links
+	private _getRouterLinks(element: Document | HTMLElement): NodeListOf<Element> {
+		return element.querySelectorAll(`.${this._routerLinkClass}`);
+	}
+
+	// Method: _setupRouterLinks
+	// Adds click event listeners to all router links
+	private _setupRouterLinks(element: Document | HTMLElement): void {
+		const routerLinks = this._getRouterLinks(element);
+		routerLinks.forEach((link) => {
 			link.addEventListener("click", (event) => {
 				event.preventDefault();
 
 				let route = link.getAttribute("href");
 
 				if (route) {
-					this.navigate(route);
+					this._navigate(route);
 				}
-
-				// Console log current path
-				console.log(window.location.pathname);
 			});
 		});
 	}
+
+	// Method: _navigate
+	// Navigates to a route
+	private _navigate(route: string): void {
+		this._currentRoute = route;
+		window.history.pushState({}, "", route);
+		this._render();
+	}
+
+	// Method: _render
+	// Renders the current route
+	private _render(): void {
+		let route = this._routes.find((route) => route.route === this._currentRoute);
+
+		if (route) {
+			fetch(`/pages/${route.component}.html`)
+				.then((response) => response.text())
+				.then((html) => {
+					if (this._rootElement) {
+						this._rootElement.innerHTML = html;
+						this._callBackFunction(this._rootElement);
+						this._setupRouterLinks(this._rootElement);
+					}
+				});
+		}
+	}
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-	let appRoot = document.getElementById("app");
+new Router(
+	"root",
+	[
+		{ route: "/home", component: "home/home" },
+		{ route: "/wishlist", component: "wishlist/overview" },
+		{ route: "/wishlist/:id", component: "wishlist/wishlist" },
+		{ route: "/wishlist/:id/:item", component: "wishlist/wish" },
+		{ route: "/login", component: "auth/login" },
+		{ route: "/register", component: "auth/register" },
+		{ route: "/profile", component: "profile/profile" },
+	],
+	"/home",
+	"routerLink"
+);
 
-	let routes = [
-		{ name: "/home", route: "/", component: "home/home" },
-		{ name: "/about", route: "/about", component: "about/about" },
-		{ name: "/contact", route: "/contact", component: "contact/contact" },
-	];
+fetch(`/pages/home/home.html`).then((response) =>
+	// Create nodelist from response
+	response.text().then((html) => {
+		// Create new document from html
+		const parser = new DOMParser();
+		const doc = parser.parseFromString(html, "text/html");
+		const body = doc.body;
 
-	let navLinks = document.querySelectorAll(".navLink");
+		// Get content from body
+		const content = body.querySelector("article");
 
-	if (appRoot) {
-		let router = new Router(appRoot, routes, "home", navLinks);
-	}
-});
-
-console.log(window.location.pathname);
+		console.log(content);
+		console.log(typeof content);
+	})
+);
