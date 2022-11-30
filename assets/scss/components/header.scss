@@ -18,7 +18,8 @@ body > header {
 		font-family: var(--font-family-secondary);
 	}
 
-	button {
+	button,
+	a {
 		border-radius: 10rem;
 		overflow: hidden;
 
