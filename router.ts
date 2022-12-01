@@ -58,7 +58,7 @@ class Router {
 	// Property: _languageFile
 	// The language file of the current language
 	private _languageFile:
-		| { langElement: { content?: string; ariaLabel?: string; alt?: string } }
+		| { [key: string]: { content?: string; ariaLabel?: string; alt?: string } }
 		| undefined;
 
 	// Constructor
@@ -152,15 +152,12 @@ class Router {
 
 			localStorage.siteLanguage = this._currentLanguage;
 
-			this._getLanguageFile().then((languageFile) => {
-				this._languageFile = languageFile;
-				console.log(this._languageFile);
-			});
-
 			console.log(this._currentLanguage);
 		}
 
 		document.addEventListener("DOMContentLoaded", () => {
+			this._rootElement = document.getElementById(this._rootElementID);
+
 			if (this._routerLinkClass) {
 				this._routerLinks = document.querySelectorAll(`.${this._routerLinkClass}`);
 				if (this._routerLinks) {
@@ -168,14 +165,28 @@ class Router {
 				}
 			}
 
-			if (this._currentLanguage) {
-				document.documentElement.lang = this._currentLanguage;
-			}
+			if (this._languages) {
+				this._getLanguageFile().then((languageFile) => {
+					this._languageFile = languageFile;
+					console.log(this._languageFile);
+					const languageElements = document.querySelectorAll("[data-lang-id]");
 
-			if (this._languageLinkClass) {
-				this._languageLinks = document.querySelectorAll(`.${this._languageLinkClass}`);
-				if (this._languageLinks) {
-					this._setupLanguageLinks(this._languageLinks);
+					console.log(languageElements);
+
+					if (languageElements) {
+						this._translate(languageElements);
+					}
+				});
+
+				if (this._currentLanguage) {
+					document.documentElement.lang = this._currentLanguage;
+				}
+
+				if (this._languageLinkClass) {
+					this._languageLinks = document.querySelectorAll(`.${this._languageLinkClass}`);
+					if (this._languageLinks) {
+						this._setupLanguageLinks(this._languageLinks);
+					}
 				}
 			}
 		});
@@ -220,6 +231,29 @@ class Router {
 					link.setAttribute("href", `/${nextLanguage.language}/${this._currentRoute.join("/")}`);
 				});
 			}
+
+			// Delete all alternate links
+			const alternateLinks = document.querySelectorAll(".alternateLink");
+			if (alternateLinks) {
+				alternateLinks.forEach((alternateLink) => {
+					alternateLink.remove();
+				});
+			}
+
+			// Create alternate links in the head for every language other than the current language
+			this._languages.forEach((language) => {
+				if (language.language !== this._currentLanguage) {
+					const alternateLink = document.createElement("link");
+					alternateLink.classList.add("alternateLink");
+					alternateLink.setAttribute("rel", "alternate");
+					alternateLink.setAttribute("hreflang", language.language);
+					alternateLink.setAttribute(
+						"href",
+						`${window.location.origin}/${language.language}/${this._currentRoute.join("/")}`
+					);
+					document.head.appendChild(alternateLink);
+				}
+			});
 		}
 	}
 
@@ -284,6 +318,38 @@ class Router {
 		return undefined;
 	}
 
+	// Method: _translate
+	// Translates the page to the current language
+	// Parameters:
+	// elements - The elements to translate
+	private _translate(elements: NodeListOf<Element>): void {
+		if (this._languages) {
+			elements.forEach((element) => {
+				const langId = element.getAttribute("data-lang-id");
+
+				console.log(langId);
+
+				if (langId && this._languageFile) {
+					const langElement = this._languageFile[langId];
+
+					if (langElement) {
+						if (langElement.content) {
+							element.innerHTML = langElement.content;
+						}
+
+						if (langElement.ariaLabel) {
+							element.setAttribute("aria-label", langElement.ariaLabel);
+						}
+
+						if (langElement.alt) {
+							element.setAttribute("alt", langElement.alt);
+						}
+					}
+				}
+			});
+		}
+	}
+
 	// Method: _setupRouterLinks
 	// Sets up the router links
 	private _setupRouterLinks(links: NodeListOf<Element>): void {
@@ -298,23 +364,6 @@ class Router {
 				}
 			});
 		});
-	}
-
-	// Method: _setRoute
-	// Sets the route
-	// Parameters:
-	// route - The route
-	private _setRoute(route: string): void {
-		if (this._languages) {
-			window.history.pushState({}, "", `/${this._currentLanguage}/${route}`);
-		} else {
-			window.history.pushState({}, "", `/${route}`);
-		}
-
-		this._currentRoute = this._getRoute();
-		if (this._languageLinks) {
-			this._setupLanguageLinks(this._languageLinks);
-		}
 	}
 
 	// Method: _getRoute
@@ -335,6 +384,23 @@ class Router {
 		}
 
 		return pathArray;
+	}
+
+	// Method: _setRoute
+	// Sets the route
+	// Parameters:
+	// route - The route
+	private _setRoute(route: string): void {
+		if (this._languages) {
+			window.history.pushState({}, "", `/${this._currentLanguage}/${route}`);
+		} else {
+			window.history.pushState({}, "", `/${route}`);
+		}
+
+		this._currentRoute = this._getRoute();
+		if (this._languageLinks) {
+			this._setupLanguageLinks(this._languageLinks);
+		}
 	}
 }
 
