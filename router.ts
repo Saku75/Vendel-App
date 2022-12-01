@@ -25,7 +25,7 @@ class Router {
 
 	// Property: _routes
 	// The routes of the router
-	private _routes: Array<{ route: string; component: string; script?: boolean }>;
+	private _routes: Array<{ route: string; title?: string; component: string; script?: boolean }>;
 
 	// Property: _defaultRoute
 	// The default route of the router
@@ -74,7 +74,7 @@ class Router {
 	// languagesFolder? - The folder of the languages
 	constructor(
 		rootElementID: string,
-		routes: Array<{ route: string; component: string; script?: boolean }>,
+		routes: Array<{ route: string; title?: string; component: string; script?: boolean }>,
 		defaultRoute: string,
 		routerLinkClass: string,
 		routesFolder?: string,
