@@ -1,5 +1,42 @@
 {
 	"btnLanguageSwitcher": {
-		"aria-label": "Change page language"
+		"ariaLabel": "Change page language"
+	},
+	"btnThemeSwitcher": {
+		"ariaLabel": "Change page theme"
+	},
+	"linkHome": {
+		"content": "Home",
+		"ariaLabel": "Go to home page"
+	},
+	"linkWishlist": {
+		"content": "Wishlists",
+		"ariaLabel": "Go to wishlist page"
+	},
+	"linkAdmin": {
+		"content": "Admin",
+		"ariaLabel": "Go to admin page"
+	},
+	"btnNavMenu": {
+		"ariaLabel": "Open navigation menu"
+	},
+	"linkProfile": {
+		"content": "Profile",
+		"ariaLabel": "Go to profile page"
+	},
+	"linkLogin": {
+		"content": "Login",
+		"ariaLabel": "Go to login page"
+	},
+	"linkRegister": {
+		"content": "Register",
+		"ariaLabel": "Go to register page"
+	},
+	"linkLogout": {
+		"content": "Logout",
+		"ariaLabel": "Logout"
+	},
+	"copyright": {
+		"content": "2022 - Lukas Vendel Mann - All rights reserved"
 	}
 }

@@ -1,5 +1,42 @@
 {
 	"btnLanguageSwitcher": {
-		"aria-label": "Skift sidens sprog"
+		"ariaLabel": "Skift sidens sprog"
+	},
+	"btnThemeSwitcher": {
+		"ariaLabel": "Skift sidens tema"
+	},
+	"linkHome": {
+		"content": "Forside",
+		"ariaLabel": "Gå til forsiden"
+	},
+	"linkWishlist": {
+		"content": "Ønskelister",
+		"ariaLabel": "Gå til ønskelister"
+	},
+	"linkAdmin": {
+		"content": "Admin",
+		"ariaLabel": "Gå til admin"
+	},
+	"btnNavMenu": {
+		"ariaLabel": "Åbn navigation"
+	},
+	"linkProfile": {
+		"content": "Profil",
+		"ariaLabel": "Gå til profil"
+	},
+	"linkLogin": {
+		"content": "Log ind",
+		"ariaLabel": "Gå til log ind"
+	},
+	"linkRegister": {
+		"content": "Opret bruger",
+		"ariaLabel": "Gå til opret bruger"
+	},
+	"linkLogout": {
+		"content": "Log ud",
+		"ariaLabel": "Log ud"
+	},
+	"copyright": {
+		"content": "2022 - Lukas Vendel Mann - Alle rettigheder forbeholdes"
 	}
 }
