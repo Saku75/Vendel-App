@@ -161,14 +161,22 @@ class Router {
 		}
 
 		document.addEventListener("DOMContentLoaded", () => {
-			this._languageLinks = document.querySelectorAll(`a.${this._languageLinkClass}`);
+			if (this._routerLinkClass) {
+				this._routerLinks = document.querySelectorAll(`.${this._routerLinkClass}`);
+				if (this._routerLinks) {
+					this._setupRouterLinks(this._routerLinks);
+				}
+			}
 
 			if (this._currentLanguage) {
 				document.documentElement.lang = this._currentLanguage;
 			}
 
-			if (this._languageLinks) {
-				this._setupLanguageLinks();
+			if (this._languageLinkClass) {
+				this._languageLinks = document.querySelectorAll(`.${this._languageLinkClass}`);
+				if (this._languageLinks) {
+					this._setupLanguageLinks(this._languageLinks);
+				}
 			}
 		});
 
@@ -189,7 +197,9 @@ class Router {
 
 	// Method: _setupLanguageLinks
 	// Sets up the language links
-	private _setupLanguageLinks(): void {
+	// Parameters:
+	// languageLinks - The language links
+	private _setupLanguageLinks(links: NodeListOf<Element>): void {
 		if (this._languages) {
 			// Get next language index
 			let nextLanguageIndex =
@@ -204,12 +214,10 @@ class Router {
 			// Get next language
 			const nextLanguage = this._languages[nextLanguageIndex];
 
-			if (this._languageLinks) {
-				this._languageLinks.forEach((languageLink) => {
-					languageLink.setAttribute(
-						"href",
-						`/${nextLanguage.language}/${this._currentRoute.join("/")}`
-					);
+			if (links) {
+				links.forEach((link) => {
+					link.innerHTML = `<img src="${this._languagesFolder}/ico/${nextLanguage.image}" alt="${nextLanguage.language}" />`;
+					link.setAttribute("href", `/${nextLanguage.language}/${this._currentRoute.join("/")}`);
 				});
 			}
 		}
@@ -223,7 +231,10 @@ class Router {
 		if (this._languages) {
 			let language = this._getTrimmedPath().split("/")[0];
 
-			if (language.length === 2) {
+			if (
+				language.length === 2 &&
+				this._languages.find((languageItem) => languageItem.language === language)
+			) {
 				return language;
 			} else {
 				return undefined;
@@ -275,7 +286,36 @@ class Router {
 
 	// Method: _setupRouterLinks
 	// Sets up the router links
-	private _setupRouterLinks(): void {}
+	private _setupRouterLinks(links: NodeListOf<Element>): void {
+		links.forEach((link) => {
+			link.addEventListener("click", (event) => {
+				event.preventDefault();
+
+				const href = link.getAttribute("href");
+
+				if (href) {
+					this._setRoute(href);
+				}
+			});
+		});
+	}
+
+	// Method: _setRoute
+	// Sets the route
+	// Parameters:
+	// route - The route
+	private _setRoute(route: string): void {
+		if (this._languages) {
+			window.history.pushState({}, "", `/${this._currentLanguage}/${route}`);
+		} else {
+			window.history.pushState({}, "", `/${route}`);
+		}
+
+		this._currentRoute = this._getRoute();
+		if (this._languageLinks) {
+			this._setupLanguageLinks(this._languageLinks);
+		}
+	}
 
 	// Method: _getRoute
 	// Gets the route from the path
@@ -290,7 +330,7 @@ class Router {
 
 		let pathArray = path.split("/");
 
-		if (pathArray[0] === "" || pathArray[0].length <= 2) {
+		if (pathArray[0] === "") {
 			pathArray[0] = this._defaultRoute;
 		}
 
@@ -305,8 +345,8 @@ const router = new Router(
 	"routerLink",
 	"/routes",
 	[
-		{ language: "da", image: "/assets/img/language-da.svg" },
-		{ language: "en", image: "/assets/img/language-en.svg" },
+		{ language: "da", image: "da.svg" },
+		{ language: "en", image: "en.svg" },
 	],
 	"da",
 	"languageLink",
