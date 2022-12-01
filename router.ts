@@ -133,8 +133,6 @@ class Router {
 
 		this._currentRoute = this._getRoute();
 
-		console.log(this._currentRoute);
-
 		if (this._languages) {
 			this._currentLanguage = this._getLanguage();
 
@@ -151,8 +149,6 @@ class Router {
 			}
 
 			localStorage.siteLanguage = this._currentLanguage;
-
-			console.log(this._currentLanguage);
 		}
 
 		document.addEventListener("DOMContentLoaded", () => {
@@ -170,8 +166,6 @@ class Router {
 					this._languageFile = languageFile;
 					console.log(this._languageFile);
 					const languageElements = document.querySelectorAll("[data-lang-id]");
-
-					console.log(languageElements);
 
 					if (languageElements) {
 						this._translate(languageElements);
