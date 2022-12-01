@@ -39,14 +39,14 @@ button {
 	}
 
 	&:focus-visible {
-		outline: auto var(--color-text);
+		outline: auto var(--color-dark);
 		color: var(--color-primary-100);
 		transform: scale(1.1);
 	}
 
 	&:active {
 		color: var(--color-secondary-100);
-		transform: scale(0.9);
+		transform: scale(0.95);
 	}
 }
 

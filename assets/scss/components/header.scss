@@ -20,11 +20,13 @@ body > header {
 
 	button,
 	a {
-		border-radius: 10rem;
-		overflow: hidden;
-
 		display: flex;
 		align-items: center;
+
+		&:has(img) {
+			border-radius: 10rem;
+			overflow: hidden;
+		}
 
 		img {
 			width: 2rem;
