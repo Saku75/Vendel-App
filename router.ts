@@ -426,6 +426,8 @@ class Router {
 
 		if (pathArray.length === 0) {
 			pathArray.push(this._defaultRoute);
+		} else if (pathArray[0] === "") {
+			pathArray[0] = this._defaultRoute;
 		}
 
 		return pathArray;
