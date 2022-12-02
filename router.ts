@@ -154,6 +154,30 @@ class Router {
 		document.addEventListener("DOMContentLoaded", () => {
 			this._rootElement = document.getElementById(this._rootElementID);
 
+			let requestedRoute = this._matchRoute(this._currentRoute);
+
+			if (requestedRoute) {
+				this._loadRoute(requestedRoute.route).then((pageContent) => {
+					if (this._rootElement && pageContent && requestedRoute) {
+						this._renderRoute(pageContent, requestedRoute);
+					} else {
+						throw new Error("The page content failed to load.");
+					}
+				});
+			} else {
+				let notFoundRoute = this._matchRoute(["404"]);
+
+				if (notFoundRoute) {
+					this._loadRoute(notFoundRoute.route).then((pageContent) => {
+						if (this._rootElement && pageContent && notFoundRoute) {
+							this._renderRoute(pageContent, notFoundRoute);
+						} else {
+							throw new Error("The page content failed to load.");
+						}
+					});
+				}
+			}
+
 			if (this._routerLinkClass) {
 				this._routerLinks = document.querySelectorAll(`.${this._routerLinkClass}`);
 				if (this._routerLinks) {
@@ -356,6 +380,30 @@ class Router {
 				if (href) {
 					this._setRoute(href);
 				}
+
+				let requestedRoute = this._matchRoute(this._currentRoute);
+
+				if (requestedRoute) {
+					this._loadRoute(requestedRoute.route).then((pageContent) => {
+						if (this._rootElement && pageContent && requestedRoute) {
+							this._renderRoute(pageContent, requestedRoute);
+						} else {
+							throw new Error("The page content failed to load.");
+						}
+					});
+				} else {
+					let notFoundRoute = this._matchRoute(["404"]);
+
+					if (notFoundRoute) {
+						this._loadRoute(notFoundRoute.route).then((pageContent) => {
+							if (this._rootElement && pageContent && notFoundRoute) {
+								this._renderRoute(pageContent, notFoundRoute);
+							} else {
+								throw new Error("The page content failed to load.");
+							}
+						});
+					}
+				}
 			});
 		});
 	}
@@ -367,14 +415,17 @@ class Router {
 	private _getRoute(): string[] {
 		let path = this._getTrimmedPath();
 
-		if (this._languages) {
-			path = path.replace(this._getLanguage() + "/", "");
-		}
-
 		let pathArray = path.split("/");
 
-		if (pathArray[0] === "") {
-			pathArray[0] = this._defaultRoute;
+		if (this._languages) {
+			// If the first part of the path is a language, remove it
+			if (pathArray[0] === this._getLanguage()) {
+				pathArray.shift();
+			}
+		}
+
+		if (pathArray.length === 0) {
+			pathArray.push(this._defaultRoute);
 		}
 
 		return pathArray;
@@ -396,11 +447,183 @@ class Router {
 			this._setupLanguageLinks(this._languageLinks);
 		}
 	}
+
+	// Method: _matchRoute
+	// Matches the route to the route in the routes array
+	// Parameters:
+	// route - The route to match
+	// Returns:
+	// The route in the routes array that matches the route and the route data from the route parameters
+	private _matchRoute(route: string[]):
+		| {
+				route: { route: string; title?: string; component: string; script?: boolean };
+				routeData?: { [key: string]: string };
+		  }
+		| undefined {
+		let routeData: { [key: string]: string } = {};
+
+		const matchedRoute = this._routes.find((routeItem) => {
+			let routeArray = routeItem.route.split("/");
+
+			// Check if the routes have the same length
+			if (routeArray.length !== route.length) {
+				return false;
+			}
+
+			// Check if route matches
+			const match = routeArray.every((routeArrayItem, index) => {
+				if (routeArrayItem.startsWith(":")) {
+					const routeParameter = routeArrayItem.replace(":", "").split("-");
+					const routeParameterValue = route[index];
+					if (routeParameter[0] === "number") {
+						if (!/^\d+$/.test(routeParameterValue)) {
+							return false;
+						}
+					} else if (routeParameter[0] === "string") {
+						if (!/^[a-zA-Z0-9]+$/.test(routeParameterValue)) {
+							return false;
+						}
+					} else {
+						console.warn("Route parameter type not supported");
+						return false;
+					}
+					return true;
+				} else {
+					return routeArrayItem === route[index];
+				}
+			});
+
+			if (match) {
+				routeArray.forEach((routeItem, index) => {
+					if (routeItem.startsWith(":")) {
+						const routeParameter = routeItem.replace(":", "").split("-");
+						const routeParameterValue = route[index];
+
+						if (routeParameter[0] === "number") {
+							if (/^\d+$/.test(routeParameterValue)) {
+								routeData[routeParameter[1]] = routeParameterValue;
+							} else {
+								return false;
+							}
+						} else if (routeParameter[0] === "string") {
+							if (/^[a-zA-Z0-9]+$/.test(routeParameterValue)) {
+								routeData[routeParameter[1]] = routeParameterValue;
+							} else {
+								return false;
+							}
+						} else {
+							console.warn("Route parameter type not supported");
+							return false;
+						}
+					}
+				});
+				return true;
+			} else {
+				return false;
+			}
+		});
+
+		if (matchedRoute) {
+			return { route: matchedRoute, routeData };
+		} else {
+			return undefined;
+		}
+	}
+
+	// Method: _loadRoute
+	// Loads the route page
+	// Parameters:
+	// route - The route
+	// Returns:
+	// The route page content as an HTML element
+	private async _loadRoute(route: {
+		route: string;
+		title?: string;
+		component: string;
+		script?: boolean;
+	}): Promise<HTMLElement> {
+		let routePage = await fetch(`${this._routesFolder}/${route.component}.html`);
+		let routePageContent = await routePage.text();
+
+		if (route.script) {
+			// Add script to head
+			const script = document.createElement("script");
+			script.src = `${this._routesFolder}/${route.component}.js`;
+			document.head.appendChild(script);
+		}
+
+		let routePageDocument = new DOMParser()
+			.parseFromString(routePageContent, "text/html")
+			.querySelector("article#page") as HTMLElement;
+
+		return routePageDocument;
+	}
+
+	// Method: _renderRoute
+	// Processes the route page content and renders it to root element
+	// Parameters:
+	// routePage - The route page content as an HTML element
+	private _renderRoute(
+		routePage: HTMLElement,
+		route: {
+			route: { route: string; title?: string; component: string; script?: boolean };
+			routeData?: { [key: string]: string };
+		}
+	): void {
+		if (this._rootElement) {
+			this._rootElement.innerHTML = "";
+			this._rootElement.appendChild(routePage);
+		}
+		// Set title
+		if (route.route.title) {
+			document.title = route.route.title;
+		}
+
+		// Setup router links
+		if (this._routerLinkClass) {
+			let routerLinks = routePage.querySelectorAll(this._routerLinkClass);
+			this._setupRouterLinks(routerLinks);
+		}
+
+		// Translate page
+		if (this._languages) {
+			// Setup language links
+			if (this._languageLinkClass) {
+				let languageLinks = routePage.querySelectorAll(this._languageLinkClass);
+				this._setupLanguageLinks(languageLinks);
+			}
+
+			let translateElements = routePage.querySelectorAll("[data-lang-id]");
+			this._translate(translateElements);
+		}
+	}
 }
 
 const router = new Router(
 	"root",
-	[{ route: "home", component: "home/home" }],
+	[
+		{ route: "home", component: "home/home" },
+		{ route: "wishlist", component: "wishlist/overview", script: true },
+		{ route: "wishlist/:number-wishlistID", component: "wishlist/wishlist", script: true },
+		{
+			route: "wishlist/:number-wishlistID/:number-wishID",
+			component: "wishlist/wish",
+			script: true,
+		},
+		{ route: "wishlist/:number-wishlistID/create", component: "wishlist/wish", script: true },
+		{ route: "admin", component: "admin/admin", script: true },
+		{ route: "admin/user/:number-wishlistID", component: "admin/user", script: true },
+		{ route: "admin/wishlist/:number-wishlistID", component: "admin/wishlist", script: true },
+		{ route: "profile", component: "profile/profile", script: true },
+		{ route: "login", component: "auth/login", script: true },
+		{ route: "register", component: "auth/register", script: true },
+		{ route: "forgot", component: "auth/forgot", script: true },
+		{ route: "reset/:string-token", component: "auth/reset", script: true },
+		{ route: "verify/:string-token", component: "auth/verify", script: true },
+		{ route: "logout", component: "auth/logout", script: true },
+		{ route: "404", component: "error/404" },
+		{ route: "403", component: "error/403" },
+	],
 	"home",
 	"routerLink",
 	"/routes",
