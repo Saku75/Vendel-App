@@ -38,5 +38,14 @@
 	},
 	"copyright": {
 		"content": "2022 - Lukas Vendel Mann - All rights reserved"
+	},
+	"homePageWelcome": {
+		"content": "Welcome to"
+	},
+	"homePageIntro": {
+		"content": "This is Vendel.dk, a website for the Vendel family. Here you can find wishlists for family members and upcoming events."
+	},
+	"homePageInfo": {
+		"content": "If you are a member of the Vendel family you are welcome to create an account."
 	}
 }
