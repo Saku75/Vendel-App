@@ -188,7 +188,6 @@ class Router {
 			if (this._languages) {
 				this._getLanguageFile().then((languageFile) => {
 					this._languageFile = languageFile;
-					console.log(this._languageFile);
 					const languageElements = document.querySelectorAll("[data-lang-id]");
 
 					if (languageElements) {
@@ -345,8 +344,6 @@ class Router {
 			elements.forEach((element) => {
 				const langId = element.getAttribute("data-lang-id");
 
-				console.log(langId);
-
 				if (langId && this._languageFile) {
 					const langElement = this._languageFile[langId];
 
@@ -362,6 +359,8 @@ class Router {
 						if (langElement.alt) {
 							element.setAttribute("alt", langElement.alt);
 						}
+					} else {
+						console.warn("Language element with id '" + langId + "' not found");
 					}
 				}
 			});
