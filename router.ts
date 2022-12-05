@@ -1,638 +1,514 @@
 class Router {
-	// Property: _rootElementID
-	// The ID of the root element of the router
-	private _rootElementID: string;
+	// Property: _rootID
+	// Type: string
+	// Description: The ID of the root element of the application
+	private _rootID: string;
 
 	// Property: _rootElement
-	// The root element of the router
-	private _rootElement: HTMLElement | null = null;
-
-	// Property: _routerLinkClass
-	// The router link class of the router
-	private _routerLinkClass: string;
-
-	// Property: _routerLinks
-	// The router links of the router
-	private _routerLinks: NodeListOf<HTMLElement> | null = null;
-
-	// Property: _languageLinkClass
-	// The language link class of the router
-	private _languageLinkClass: string | undefined;
-
-	// Property: _languageLinks
-	// The language links of the router
-	private _languageLinks: NodeListOf<HTMLElement> | null = null;
+	// Type: HTMLElement
+	// Description: The root element of the application
+	private _rootElement: HTMLElement | undefined;
 
 	// Property: _routes
-	// The routes of the router
-	private _routes: Array<{ route: string; title?: string; component: string; script?: boolean }>;
+	// Type: Array<{
+	// 	route: string;
+	// 	component: string;
+	// 	default?: boolean;
+	// 	title?: string;
+	// 	script?: boolean;
+	// }>
+	// Description: The routes of the application
+	private _routes: Array<{
+		route: string;
+		component: string;
+		default?: boolean;
+		title?: string;
+		script?: boolean;
+	}>;
 
-	// Property: _defaultRoute
-	// The default route of the router
-	private _defaultRoute: string;
+	// Property: _routerLinkClass
+	// Type: string
+	// Description: The class name of router links
+	private _routerLinkClass: string;
+
+	// Property: _routesDirectory
+	// Type: string
+	// Description: The directory of the routes
+	private _routesDirectory: string;
 
 	// Property: _currentRoute
-	// The current route of the router
+	// Type: string
+	// Description: The current route
 	private _currentRoute: string[];
 
-	// Property: _routesFolder
-	// The folder of the routes
-	private _routesFolder = "/routes";
-
 	// Property: _languages
-	// The languages of the router
-	private _languages: Array<{ language: string; image: string }> | undefined;
+	// Type: Array<{
+	// 	language: string;
+	// 	default?: boolean;
+	//  image?: string;
+	// }> | undefined
+	// Description: The languages of the application
+	private _languages:
+		| Array<{
+				language: string;
+				default?: boolean;
+				image?: string;
+		  }>
+		| undefined;
 
-	// Property: _defaultLanguage
-	// The default language of the router
-	private _defaultLanguage: string | undefined;
+	// Property: _languageLinkClass
+	// Type: string
+	// Description: The class name of language links
+	private _languageLinkClass: string | undefined;
+
+	// Property: _languagesDirectory
+	// Type: string | undefined
+	// Description: The directory of the languages
+	private _languagesDirectory: string | undefined;
 
 	// Property: _currentLanguage
-	// The current language of the router
+	// Type: string | undefined
+	// Description: The current language
 	private _currentLanguage: string | undefined;
 
-	// Property: _languagesFolder
-	// The folder of the languages
-	private _languagesFolder = "/languages";
-
-	// Property: _languageFile
-	// The language file of the current language
-	private _languageFile:
-		| { [key: string]: { content?: string; ariaLabel?: string; alt?: string } }
+	// Property: _currentLanguageFile
+	// Type: string | undefined
+	// Description: The current language file
+	private _currentLanguageFile:
+		| {
+				[key: string]: {
+					innerHTML?: string;
+					ariaLabel?: string;
+					src?: string;
+					alt?: string;
+				};
+		  }
 		| undefined;
 
 	// Constructor
 	// Parameters:
-	// rootElementID - The ID of the root element
-	// routes - The routes of the router
-	// defaultRoute - The default route of the router
-	// routerLinkClass - The router link class of the router
-	// routesFolder - The folder of the routes
-	// languages? - The languages of the router
-	// defaultLanguage? - The default language of the router
-	// languageLinkClass? - The language link class of the router
-	// languagesFolder? - The folder of the languages
+	// - rootID: string
+	// - routes: Array<{
+	// 	route: string;
+	// 	component: string;
+	// 	default?: boolean;
+	// 	title?: string;
+	// 	script?: boolean;
+	// }>
+	// - routesDirectory: string
+	// - languages?: Array<{
+	// 	language: string;
+	// 	default?: boolean;
+	//  image?: string;
+	// }>
+	// - languagesDirectory?: string
 	constructor(
-		rootElementID: string,
-		routes: Array<{ route: string; title?: string; component: string; script?: boolean }>,
-		defaultRoute: string,
+		rootID: string,
+		routes: Array<{
+			route: string;
+			component: string;
+			default?: boolean;
+			title?: string;
+			script?: boolean;
+		}>,
 		routerLinkClass: string,
-		routesFolder?: string,
-		languages?: Array<{ language: string; image: string }>,
-		defaultLanguage?: string,
+		routesDirectory: string,
+		languages?: Array<{
+			language: string;
+			default?: boolean;
+			image?: string;
+		}>,
 		languageLinkClass?: string,
-		languagesFolder?: string
+		languagesDirectory?: string
 	) {
-		if (!rootElementID) {
-			throw new Error("The root element ID is required.");
-		} else {
-			this._rootElementID = rootElementID;
-		}
+		// Set the root element ID
+		if (rootID) {
+			this._rootID = rootID;
 
-		if (!routes) {
-			throw new Error("The routes are required.");
-		} else {
-			this._routes = routes;
-		}
+			// Set the routes
+			if (routes) {
+				// Check if there is exactly one default route
+				let defaultRouteCount = 0;
+				for (let i = 0; i < routes.length; i++) {
+					if (routes[i].default) {
+						defaultRouteCount++;
+					}
+				}
+				if (defaultRouteCount === 1) {
+					this._routes = routes;
+				} else {
+					throw new Error("Router: There must be exactly one default route.");
+				}
 
-		if (!defaultRoute) {
-			throw new Error("The default route is required.");
-		} else {
-			this._defaultRoute = defaultRoute;
-		}
+				// Set the router link class
+				if (routerLinkClass) {
+					this._routerLinkClass = routerLinkClass;
+				} else {
+					throw new Error("Router: The router link class is required.");
+				}
 
-		if (!routerLinkClass) {
-			throw new Error("The router link class is required.");
-		} else {
-			this._routerLinkClass = routerLinkClass;
-		}
-
-		if (routesFolder) {
-			this._routesFolder = routesFolder;
-		}
-
-		if (languages) {
-			this._languages = languages;
-
-			if (!defaultLanguage) {
-				throw new Error("The default language is required.");
+				// Set the routes directory
+				if (routesDirectory) {
+					this._routesDirectory = routesDirectory;
+				} else {
+					throw new Error("Router: The routes directory is required.");
+				}
 			} else {
-				this._defaultLanguage = defaultLanguage;
+				throw new Error("Router: The routes are required.");
 			}
 
-			if (!languageLinkClass) {
-				throw new Error("The language link class is required.");
-			} else {
-				this._languageLinkClass = languageLinkClass;
-			}
+			// Set the languages
+			if (languages) {
+				// Check if there is exactly one default language
+				let defaultLanguageCount = 0;
+				for (let i = 0; i < languages.length; i++) {
+					if (languages[i].default) {
+						defaultLanguageCount++;
+					}
+				}
+				if (defaultLanguageCount === 1) {
+					this._languages = languages;
+				} else {
+					throw new Error("Router: There must be exactly one default language.");
+				}
 
-			if (languagesFolder) {
-				this._languagesFolder = languagesFolder;
+				// Set the language link class
+				if (languageLinkClass) {
+					this._languageLinkClass = languageLinkClass;
+				} else {
+					throw new Error("Router: The language link class is required.");
+				}
+
+				// Set the languages directory
+				if (languagesDirectory) {
+					this._languagesDirectory = languagesDirectory;
+				} else {
+					throw new Error("Router: The languages directory is required.");
+				}
 			}
+		} else {
+			throw new Error("Router: The root element ID is required.");
 		}
 
+		// Get the current route
 		this._currentRoute = this._getRoute();
 
 		if (this._languages) {
+			// Get the current language
 			this._currentLanguage = this._getLanguage();
 
-			if (!this._currentLanguage) {
-				this._currentLanguage = localStorage.siteLanguage;
-
-				if (!this._currentLanguage) {
-					this._currentLanguage = this._getPreferredLanguage();
-				}
-
-				if (this._currentLanguage) {
-					this._setLanguage(this._currentLanguage);
-				}
-			}
-
-			localStorage.siteLanguage = this._currentLanguage;
+			// Set local storage language
+			localStorage.setItem("routerPreferredLanguage", this._currentLanguage);
 		}
 
+		// Set the current route
+		this.setRoute(this._currentRoute.join("/"));
+
 		document.addEventListener("DOMContentLoaded", () => {
-			this._rootElement = document.getElementById(this._rootElementID);
+			// Add router links
+			this._addRouterLinks(document);
 
-			let requestedRoute = this._matchRoute(this._currentRoute);
-
-			if (requestedRoute) {
-				this._loadRoute(requestedRoute.route).then((pageContent) => {
-					if (this._rootElement && pageContent && requestedRoute) {
-						this._renderRoute(pageContent, requestedRoute);
-					} else {
-						throw new Error("The page content failed to load.");
-					}
-				});
-			} else {
-				let notFoundRoute = this._matchRoute(["404"]);
-
-				if (notFoundRoute) {
-					this._loadRoute(notFoundRoute.route).then((pageContent) => {
-						if (this._rootElement && pageContent && notFoundRoute) {
-							this._renderRoute(pageContent, notFoundRoute);
-						} else {
-							throw new Error("The page content failed to load.");
-						}
-					});
-				}
-			}
-
-			if (this._routerLinkClass) {
-				this._routerLinks = document.querySelectorAll(`.${this._routerLinkClass}`);
-				if (this._routerLinks) {
-					this._setupRouterLinks(this._routerLinks);
-				}
-			}
-
+			// Add language links
 			if (this._languages) {
-				this._getLanguageFile().then((languageFile) => {
-					this._languageFile = languageFile;
-					const languageElements = document.querySelectorAll("[data-lang-id]");
-
-					if (languageElements) {
-						this._translate(languageElements);
-					}
-				});
-
-				if (this._currentLanguage) {
-					document.documentElement.lang = this._currentLanguage;
-				}
-
-				if (this._languageLinkClass) {
-					this._languageLinks = document.querySelectorAll(`.${this._languageLinkClass}`);
-					if (this._languageLinks) {
-						this._setupLanguageLinks(this._languageLinks);
-					}
-				}
+				this._addLanguageLinks(document);
+				this._addAlternateLanguageLinks(document);
 			}
 		});
-
-		// ...
 	}
 
 	// Method: _getTrimmedPath
-	// Gets the trimmed path
-	// Returns:
-	// The trimmed path
+	// Description: Gets the trimmed path
 	private _getTrimmedPath(): string {
+		// Get the path
 		let path = window.location.pathname;
 
+		// Trim the path
 		path = path.replace(/^\/+|\/+$/g, "");
 
+		// Return the trimmed path
 		return path;
 	}
 
-	// Method: _setupLanguageLinks
-	// Sets up the language links
-	// Parameters:
-	// languageLinks - The language links
-	private _setupLanguageLinks(links: NodeListOf<Element>): void {
+	// Method: _getRoute
+	// Description: Get the current route
+	private _getRoute(): string[] {
+		// Get the trimmed path
+		let path = this._getTrimmedPath();
+
+		// Split the trimmed path
+		let route = path.split("/");
+
+		// If language is set and the first part of the route is a language then remove it
+		if (this._languages && this._languages.find((language) => language.language === route[0])) {
+			route.shift();
+		}
+
+		// If the route length is 0 or the first part of the route is empty then set the default route
+		if (route.length === 0 || route[0] === "") {
+			route[0] = this._routes.find((route) => route.default)!.route;
+		}
+
+		// Return the path split
+		return route;
+	}
+
+	// Method: _setRoute
+	// Description: Set the current route
+	public setRoute(routeTo: string): void {
+		// If language is set then add it to the route
 		if (this._languages) {
-			// Get next language index
-			let nextLanguageIndex =
-				this._languages.findIndex((language) => language.language === this._currentLanguage) + 1;
+			routeTo = this._currentLanguage + "/" + routeTo;
+		}
 
-			// If next language index is greater than the languages length
-			if (nextLanguageIndex > this._languages.length - 1) {
-				// Set next language index to 0
-				nextLanguageIndex = 0;
-			}
+		// Set the route
+		window.history.pushState({}, "", "/" + routeTo);
 
-			// Get next language
-			const nextLanguage = this._languages[nextLanguageIndex];
+		// Set the current route
+		this._currentRoute = this._getRoute();
 
-			if (links) {
-				links.forEach((link) => {
-					link.innerHTML = `<img src="${this._languagesFolder}/ico/${nextLanguage.image}" alt="${nextLanguage.language}" />`;
-					link.setAttribute("href", `/${nextLanguage.language}/${this._currentRoute.join("/")}`);
-				});
-			}
-
-			// Delete all alternate links
-			const alternateLinks = document.querySelectorAll(".alternateLink");
-			if (alternateLinks) {
-				alternateLinks.forEach((alternateLink) => {
-					alternateLink.remove();
-				});
-			}
-
-			// Create alternate links in the head for every language other than the current language
-			this._languages.forEach((language) => {
-				if (language.language !== this._currentLanguage) {
-					const alternateLink = document.createElement("link");
-					alternateLink.classList.add("alternateLink");
-					alternateLink.setAttribute("rel", "alternate");
-					alternateLink.setAttribute("hreflang", language.language);
-					alternateLink.setAttribute(
-						"href",
-						`${window.location.origin}/${language.language}/${this._currentRoute.join("/")}`
-					);
-					document.head.appendChild(alternateLink);
-				}
-			});
+		if (this._languages) {
+			// Update language links
+			this._updateLanguageLinks(document);
 		}
 	}
 
 	// Method: _getLanguage
-	// Gets the language from the path
-	// Returns:
-	// The language from the path without the route if languages are defined
-	private _getLanguage(): string | undefined {
+	// Description: Get the current language
+	private _getLanguage(): string {
 		if (this._languages) {
-			let language = this._getTrimmedPath().split("/")[0];
+			// Get the trimmed path
+			let path = this._getTrimmedPath();
 
-			if (
-				language.length === 2 &&
-				this._languages.find((languageItem) => languageItem.language === language)
-			) {
-				return language;
-			} else {
-				return undefined;
+			// Split the trimmed path
+			let route = path.split("/");
+
+			// If the first part of the route is a supported language then return it
+			if (this._languages.find((language) => language.language === route[0])) {
+				return route[0];
 			}
+
+			// If preferred language is set in local storage and it is a supported language then return it
+			if (
+				localStorage.getItem("routerPreferredLanguage") &&
+				this._languages.find(
+					(language) => language.language === localStorage.getItem("routerPreferredLanguage")
+				)
+			) {
+				return localStorage.getItem("routerPreferredLanguage")!;
+			} else {
+				if (localStorage.getItem("routerPreferredLanguage")) {
+					localStorage.removeItem("routerPreferredLanguage");
+				}
+			}
+
+			// If the browser languages are set and one of them is a supported language then return it
+			if (navigator.languages) {
+				for (let i = 0; i < navigator.languages.length; i++) {
+					if (this._languages.find((language) => language.language === navigator.languages[i])) {
+						return navigator.languages[i];
+					}
+				}
+			}
+
+			// Return the default language
+			return this._languages.find((language) => language.default)!.language;
+		} else {
+			throw new Error("Router: Language functionality is not enabled.");
 		}
 	}
 
 	// Method: _setLanguage
-	// Sets the language
-	// Parameters:
-	// language - The language
-	private _setLanguage(language: string): void {
+	// Description: Set the current language
+	public setLanguage(languageTo: string): void {
 		if (this._languages) {
-			let route = this._currentRoute.join("/");
-
-			window.history.pushState({}, "", `/${language}/${route}`);
-		}
-	}
-
-	// Method: _getLanguageFile
-	// Gets the language file of the current language
-	// Returns:
-	// The language file of the current language
-	private async _getLanguageFile(): Promise<{
-		langElement: { content?: string; ariaLabel?: string; alt?: string };
-	}> {
-		let languageFile = await fetch(this._languagesFolder + "/" + this._currentLanguage + ".json");
-
-		return await languageFile.json();
-	}
-
-	// Method: _getPreferredLanguage
-	// Gets the first preferred language from the browser that is supported by the router
-	private _getPreferredLanguage(): string | undefined {
-		if (this._languages) {
-			const browserLanguages = navigator.languages;
-
-			for (let i = 0; i < browserLanguages.length; i++) {
-				const languageCode = browserLanguages[i].split("-")[0];
-				for (let j = 0; j < this._languages.length; j++) {
-					if (languageCode == this._languages[j].language) {
-						return this._languages[j].language;
-					}
-				}
+			// If the language is not a supported language then throw an error
+			if (!this._languages.find((language) => language.language === languageTo)) {
+				throw new Error("Router: The language is not supported.");
 			}
+
+			// Set the language
+			window.history.pushState({}, "", "/" + languageTo + "/" + this._currentRoute.join("/"));
+
+			// Set the current language
+			this._currentLanguage = this._getLanguage();
+		} else {
+			throw new Error("Router: Language functionality is not enabled.");
 		}
-		return undefined;
 	}
 
-	// Method: _translate
-	// Translates the page to the current language
+	// Method: _addRouterLinks
 	// Parameters:
-	// elements - The elements to translate
-	private _translate(elements: NodeListOf<Element>): void {
-		if (this._languages) {
-			elements.forEach((element) => {
-				const langId = element.getAttribute("data-lang-id");
+	// - document: The document to add the router links to
+	// Description: Add router links to the document
+	private _addRouterLinks(document: Document): void {
+		// Get all the router links
+		let routerLinks = document.querySelectorAll("." + this._routerLinkClass);
 
-				if (langId && this._languageFile) {
-					const langElement = this._languageFile[langId];
-
-					if (langElement) {
-						if (langElement.content) {
-							element.innerHTML = langElement.content;
-						}
-
-						if (langElement.ariaLabel) {
-							element.setAttribute("aria-label", langElement.ariaLabel);
-						}
-
-						if (langElement.alt) {
-							element.setAttribute("alt", langElement.alt);
-						}
-					} else {
-						console.warn("Language element with id '" + langId + "' not found");
-					}
-				}
-			});
-		}
-	}
-
-	// Method: _setupRouterLinks
-	// Sets up the router links
-	private _setupRouterLinks(links: NodeListOf<Element>): void {
-		links.forEach((link) => {
-			link.addEventListener("click", (event) => {
+		// Loop through all the router links
+		routerLinks.forEach((routerLink) => {
+			// Add a click event listener to the router link
+			routerLink.addEventListener("click", (event) => {
+				// Prevent the default behavior
 				event.preventDefault();
 
-				const href = link.getAttribute("href");
-
-				if (href) {
-					this._setRoute(href);
-				}
-
-				let requestedRoute = this._matchRoute(this._currentRoute);
-
-				if (requestedRoute) {
-					this._loadRoute(requestedRoute.route).then((pageContent) => {
-						if (this._rootElement && pageContent && requestedRoute) {
-							this._renderRoute(pageContent, requestedRoute);
-						} else {
-							throw new Error("The page content failed to load.");
-						}
-					});
-				} else {
-					let notFoundRoute = this._matchRoute(["404"]);
-
-					if (notFoundRoute) {
-						this._loadRoute(notFoundRoute.route).then((pageContent) => {
-							if (this._rootElement && pageContent && notFoundRoute) {
-								this._renderRoute(pageContent, notFoundRoute);
-							} else {
-								throw new Error("The page content failed to load.");
-							}
-						});
-					}
-				}
+				// Set the route
+				this.setRoute(routerLink.getAttribute("href")!);
 			});
 		});
 	}
 
-	// Method: _getRoute
-	// Gets the route from the path
-	// Returns:
-	// The route from the path without the language
-	private _getRoute(): string[] {
-		let path = this._getTrimmedPath();
-
-		let pathArray = path.split("/");
-
+	// Method: _addLanguageLinks
+	// Parameters:
+	// - document: The document to add the language links to
+	// Description: Add language links to the document
+	private _addLanguageLinks(document: Document): void {
 		if (this._languages) {
-			// If the first part of the path is a language, remove it
-			if (pathArray[0] === this._getLanguage()) {
-				pathArray.shift();
+			// Get all the language links
+			let languageLinks = document.querySelectorAll("." + this._languageLinkClass);
+
+			// Get the next language index
+			let nextLanguageIndex =
+				this._languages.findIndex((language) => language.language === this._currentLanguage) + 1;
+
+			// If the next language index is out of bounds then set it to 0
+			if (nextLanguageIndex >= this._languages.length) {
+				nextLanguageIndex = 0;
 			}
-		}
 
-		if (pathArray.length === 0) {
-			pathArray.push(this._defaultRoute);
-		} else if (pathArray[0] === "") {
-			pathArray[0] = this._defaultRoute;
-		}
+			// Loop through all the language links
+			languageLinks.forEach((languageLink) => {
+				// Set the language link image if it is set else set the language link text
+				if (this._languages) {
+					if (this._languages[nextLanguageIndex].image) {
+						languageLink.innerHTML = `<img src="${this._languagesDirectory}/ico/${this._languages[nextLanguageIndex].image}" alt="${this._languages[nextLanguageIndex].language}">`;
+					} else {
+						languageLink.innerHTML = this._languages[nextLanguageIndex].language;
+					}
 
-		return pathArray;
+					languageLink.setAttribute(
+						"href",
+						"/" + this._languages[nextLanguageIndex].language + "/" + this._currentRoute.join("/")
+					);
+				}
+			});
+		} else {
+			throw new Error("Router: Language functionality is not enabled.");
+		}
 	}
 
-	// Method: _setRoute
-	// Sets the route
+	// Method: _addAlternateLanguageLinks
 	// Parameters:
-	// route - The route
-	private _setRoute(route: string): void {
+	// - document: The document to add the alternate language links to
+	// Description: Add alternate language links to the document
+	private _addAlternateLanguageLinks(document: Document): void {
 		if (this._languages) {
-			window.history.pushState({}, "", `/${this._currentLanguage}/${route}`);
+			// Setup alternate language links in head
+			this._languages.forEach((language) => {
+				if (language.language !== this._currentLanguage) {
+					let alternateLanguageLink = document.createElement("link");
+					alternateLanguageLink.classList.add("routerAlternateLanguageLink");
+					alternateLanguageLink.setAttribute("rel", "alternate");
+					alternateLanguageLink.setAttribute("hreflang", language.language);
+					alternateLanguageLink.setAttribute(
+						"href",
+						window.location.origin + "/" + language.language + "/" + this._currentRoute.join("/")
+					);
+					document.head.appendChild(alternateLanguageLink);
+				}
+			});
 		} else {
-			window.history.pushState({}, "", `/${route}`);
+			throw new Error("Router: Language functionality is not enabled.");
 		}
+	}
 
-		this._currentRoute = this._getRoute();
-		if (this._languageLinks) {
-			this._setupLanguageLinks(this._languageLinks);
+	// Method: _updateLanguageLinks
+	// Parameters:
+	// - document: The document to update the language links and alternate language links in
+	// Description: Update the href of the language links and alternate language links in the document
+	private _updateLanguageLinks(document: Document): void {
+		if (this._languages) {
+			// Get all the language links
+			let languageLinks = document.querySelectorAll("." + this._languageLinkClass);
+
+			// Get the next language index
+			let nextLanguageIndex =
+				this._languages.findIndex((language) => language.language === this._currentLanguage) + 1;
+
+			// If the next language index is out of bounds then set it to 0
+			if (nextLanguageIndex >= this._languages.length) {
+				nextLanguageIndex = 0;
+			}
+
+			// Loop through all the language links
+			languageLinks.forEach((languageLink) => {
+				if (this._languages) {
+					// Set the language link href
+					languageLink.setAttribute(
+						"href",
+						"/" + this._languages[nextLanguageIndex].language + "/" + this._currentRoute.join("/")
+					);
+				}
+			});
+
+			// Remove all the alternate language links
+			let alternateLanguageLinks = document.querySelectorAll(".routerAlternateLanguageLink");
+			alternateLanguageLinks.forEach((alternateLanguageLink) => {
+				alternateLanguageLink.remove();
+			});
+
+			// Add the alternate language links
+			this._addAlternateLanguageLinks(document);
+		} else {
+			throw new Error("Router: Language functionality is not enabled.");
 		}
 	}
 
 	// Method: _matchRoute
-	// Matches the route to the route in the routes array
 	// Parameters:
-	// route - The route to match
-	// Returns:
-	// The route in the routes array that matches the route and the route data from the route parameters
-	private _matchRoute(route: string[]):
-		| {
-				route: { route: string; title?: string; component: string; script?: boolean };
-				routeData?: { [key: string]: string };
-		  }
-		| undefined {
-		let routeData: { [key: string]: string } = {};
+	// - route: The route to match
+	// Description: Match the route to the routes and return the matched route and parameters
 
-		const matchedRoute = this._routes.find((routeItem) => {
-			let routeArray = routeItem.route.split("/");
-
-			// Check if the routes have the same length
-			if (routeArray.length !== route.length) {
-				return false;
-			}
-
-			// Check if route matches
-			const match = routeArray.every((routeArrayItem, index) => {
-				if (routeArrayItem.startsWith(":")) {
-					const routeParameter = routeArrayItem.replace(":", "").split("-");
-					const routeParameterValue = route[index];
-					if (routeParameter[0] === "number") {
-						if (!/^\d+$/.test(routeParameterValue)) {
-							return false;
-						}
-					} else if (routeParameter[0] === "string") {
-						if (!/^[a-zA-Z0-9]+$/.test(routeParameterValue)) {
-							return false;
-						}
-					} else {
-						console.warn("Route parameter type not supported");
-						return false;
-					}
-					return true;
-				} else {
-					return routeArrayItem === route[index];
-				}
-			});
-
-			if (match) {
-				routeArray.forEach((routeItem, index) => {
-					if (routeItem.startsWith(":")) {
-						const routeParameter = routeItem.replace(":", "").split("-");
-						const routeParameterValue = route[index];
-
-						if (routeParameter[0] === "number") {
-							if (/^\d+$/.test(routeParameterValue)) {
-								routeData[routeParameter[1]] = routeParameterValue;
-							} else {
-								return false;
-							}
-						} else if (routeParameter[0] === "string") {
-							if (/^[a-zA-Z0-9]+$/.test(routeParameterValue)) {
-								routeData[routeParameter[1]] = routeParameterValue;
-							} else {
-								return false;
-							}
-						} else {
-							console.warn("Route parameter type not supported");
-							return false;
-						}
-					}
-				});
-				return true;
-			} else {
-				return false;
-			}
-		});
-
-		if (matchedRoute) {
-			return { route: matchedRoute, routeData };
-		} else {
-			return undefined;
-		}
-	}
-
-	// Method: _loadRoute
-	// Loads the route page
+	// Method: _fetchPage
 	// Parameters:
-	// route - The route
-	// Returns:
-	// The route page content as an HTML element
-	private async _loadRoute(route: {
-		route: string;
-		title?: string;
-		component: string;
-		script?: boolean;
-	}): Promise<HTMLElement> {
-		let routePage = await fetch(`${this._routesFolder}/${route.component}.html`);
-		let routePageContent = await routePage.text();
+	// - route: The route to fetch the page for
+	// Description: Fetch the page for the route
 
-		if (route.script) {
-			// Add script to head
-			const script = document.createElement("script");
-			script.src = `${this._routesFolder}/${route.component}.js`;
-			document.head.appendChild(script);
-		}
-
-		let routePageDocument = new DOMParser()
-			.parseFromString(routePageContent, "text/html")
-			.querySelector("article#page") as HTMLElement;
-
-		return routePageDocument;
-	}
-
-	// Method: _renderRoute
-	// Processes the route page content and renders it to root element
+	// Method: _processPage
 	// Parameters:
-	// routePage - The route page content as an HTML element
-	private _renderRoute(
-		routePage: HTMLElement,
-		route: {
-			route: { route: string; title?: string; component: string; script?: boolean };
-			routeData?: { [key: string]: string };
-		}
-	): void {
-		if (this._rootElement) {
-			this._rootElement.innerHTML = "";
-			this._rootElement.appendChild(routePage);
-		}
-		// Set title
-		if (route.route.title) {
-			document.title = route.route.title;
-		}
+	// - route: The route to process the page for
+	// - page: The page to process
+	// Description: Process the page for the route
 
-		// Setup router links
-		if (this._routerLinkClass) {
-			let routerLinks = routePage.querySelectorAll(this._routerLinkClass);
-			this._setupRouterLinks(routerLinks);
-		}
-
-		// Translate page
-		if (this._languages) {
-			// Setup language links
-			if (this._languageLinkClass) {
-				let languageLinks = routePage.querySelectorAll(this._languageLinkClass);
-				this._setupLanguageLinks(languageLinks);
-			}
-
-			let translateElements = routePage.querySelectorAll("[data-lang-id]");
-			this._translate(translateElements);
-		}
-	}
+	// Method: _displayPage
+	// Parameters:
+	// - route: The route to display the page for
+	// - page: The page to display
+	// Description: Display the page for the route
 }
 
-const router = new Router(
+let router = new Router(
 	"root",
 	[
-		{ route: "home", component: "home/home" },
-		{ route: "wishlist", component: "wishlist/overview", script: true },
-		{ route: "wishlist/:number-wishlistID", component: "wishlist/wishlist", script: true },
 		{
-			route: "wishlist/:number-wishlistID/:number-wishID",
-			component: "wishlist/wish",
+			route: "home",
+			component: "home",
+			default: true,
 			script: true,
 		},
-		{ route: "wishlist/:number-wishlistID/create", component: "wishlist/wish", script: true },
-		{ route: "admin", component: "admin/admin", script: true },
-		{ route: "admin/user/:number-wishlistID", component: "admin/user", script: true },
-		{ route: "admin/wishlist/:number-wishlistID", component: "admin/wishlist", script: true },
-		{ route: "profile", component: "profile/profile", script: true },
-		{ route: "login", component: "auth/login", script: true },
-		{ route: "register", component: "auth/register", script: true },
-		{ route: "forgot", component: "auth/forgot", script: true },
-		{ route: "reset/:string-token", component: "auth/reset", script: true },
-		{ route: "verify/:string-token", component: "auth/verify", script: true },
-		{ route: "logout", component: "auth/logout", script: true },
-		{ route: "404", component: "error/404" },
-		{ route: "403", component: "error/403" },
 	],
-	"home",
 	"routerLink",
 	"/routes",
 	[
-		{ language: "da", image: "da.svg" },
-		{ language: "en", image: "en.svg" },
+		{
+			language: "da",
+			default: true,
+			image: "da.svg",
+		},
+		{
+			language: "en",
+			image: "en.svg",
+		},
 	],
-	"da",
 	"languageLink",
 	"/assets/lang"
 );
