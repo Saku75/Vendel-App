@@ -22,7 +22,6 @@ class Router {
 		route: string;
 		component: string;
 		default?: boolean;
-		title?: string;
 		script?: boolean;
 	}>;
 
@@ -467,11 +466,23 @@ class Router {
 	// Parameters:
 	// - route: The route to match
 	// Description: Match the route to the routes and return the matched route and parameters
+	private _matchRoute(route: string): {
+		route: { route: string; component: string; default?: boolean; script?: boolean };
+		parameters: { [key: string]: string };
+	} {
+		// Split the route into parts
+		let routeParts = route.split("/");
+	}
 
 	// Method: _fetchPage
 	// Parameters:
 	// - route: The route to fetch the page for
 	// Description: Fetch the page for the route
+
+	// Method: _translatePage
+	// Parameters:
+	// - page: The page to translate
+	// Description: Translate the page
 
 	// Method: _processPage
 	// Parameters:
