@@ -1,24 +1,24 @@
-.page-home {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
+.pageHome {
 	gap: 1rem;
 
+	text-align: center;
+
 	h2 {
-		font-weight: var(--font-weight-regular);
-		text-align: center;
-
-		span:first-child {
+		span {
 			display: block;
-		}
 
-		span:last-child {
-			font-size: var(--font-size-xl);
-			font-family: var(--font-family-secondary);
+			&:first-child {
+				font-size: var(--fontSizeLG);
+			}
+
+			&:last-child {
+				font-size: var(--fontSizeXL);
+				font-family: var(--fontFamilySecondary);
+			}
 		}
 	}
 
-	p {
-		text-align: center;
+	small {
+		font-size: var(--fontSizeSM);
 	}
 }

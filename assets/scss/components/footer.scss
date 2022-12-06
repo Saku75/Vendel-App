@@ -1,20 +1,13 @@
 body > footer {
-	width: 100%;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	padding: 0.5rem clamp(0.5rem, 4vw, 1.5rem);
-	background-color: var(--color-base-3);
+	margin-top: auto;
+	padding: 0.25rem clamp(1rem, 5vw, 2rem);
 
-	position: absolute;
-	bottom: 0;
+	background-color: var(--colorBase3);
 
 	small {
-		display: flex;
-		align-items: center;
-		gap: 0.5rem;
-		text-align: center;
+		gap: 0.25rem;
 
-		font-size: var(--font-size-sm);
+		font-size: var(--fontSizeSM);
+		text-align: center;
 	}
 }

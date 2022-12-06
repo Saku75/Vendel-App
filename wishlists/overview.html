@@ -14,7 +14,7 @@
 		<meta charset="UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Vendel.dk</title>
+		<title>Ønskelister | Vendel.dk</title>
 
 		<link
 			href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Inter:wght@400;700&display=swap"
@@ -26,6 +26,9 @@
 		<link rel="stylesheet" href="/assets/main.css" />
 
 		<script src="/assets/js/themeSwitcher.js"></script>
+
+		<script src="/assets/js/objects.js"></script>
+		<script src="/assets/js/api.js"></script>
 	</head>
 	<body>
 		<header>
@@ -91,15 +94,44 @@
 			</div>
 		</nav>
 		<main>
-			<article class="pageHome widthContainerSM">
-				<h2><span>Velkommen til</span><span>Vendel.dk</span></h2>
+			<article id="empty" class="pageOverview widthContainerXL hidden">
+				<h2>Ønskelister</h2>
 				<p>
-					Dette er Vendel.dk, en hjemmeside til familien Vendel. <br />
-					Her ligger ønskelister for familiemedlemmer og kommende begivenheder.
+					Der kunne ikke findes nogen ønskelister på nuværende tidspunkt. <br />
+					Prøv igen senere.
 				</p>
+			</article>
+			<article id="success" class="pageOverview widthContainerXL">
+				<h2>Ønskelister</h2>
+				<ul>
+					<li>
+						<a class="item" href="wishlist.html?wishlist_id=X">
+							<p aria-label="Dato for begivenhed">XX-XX</p>
+							<h3>Ønskelistenavn</h3>
+							<p>Sidst opdateret: <span aria-label="dato">XX-XX-XXXX</span></p>
+						</a>
+					</li>
+					<li>
+						<a class="item" href="wishlist.html?wishlist_id=X">
+							<p aria-label="Dato for begivenhed">XX-XX</p>
+							<h3>Ønskelistenavn</h3>
+							<p>Sidst opdateret: <span aria-label="dato">XX-XX-XXXX</span></p>
+						</a>
+					</li>
+					<li>
+						<a class="item" href="wishlist.html?wishlist_id=X">
+							<p aria-label="Dato for begivenhed">XX-XX</p>
+							<h3>Ønskelistenavn</h3>
+							<p>Sidst opdateret: <span aria-label="dato">XX-XX-XXXX</span></p>
+						</a>
+					</li>
+				</ul>
+			</article>
+			<article id="error" class="pageOverview widthContainerXL hidden">
+				<h2>Ønskelister</h2>
 				<p>
-					Hvis du er en del af familien Vendel er du velkommen til at oprette en bruger. <br />
-					<small>(Brugeren skal godkendes før den er aktiv)</small>
+					Der skete en fejl under hentning af ønskelister. <br />
+					Prøv igen senere.
 				</p>
 			</article>
 		</main>

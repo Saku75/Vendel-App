@@ -1,36 +1,32 @@
 body > header {
-	width: 100%;
-	display: flex;
-	justify-content: center;
-	padding: 1rem clamp(1rem, 4vw, 1.5rem);
-	background-color: var(--color-base-2);
+	padding: 1rem clamp(1rem, 5vw, 2rem);
 
-	& > div[class*="width-container-"] {
-		width: 100%;
-		display: flex;
+	background-color: var(--colorBase2);
+
+	& > div {
 		justify-content: space-between;
-		align-items: center;
 	}
 
 	h1 {
-		font-size: var(--font-size-xl);
-		font-weight: var(--font-weight-bold);
-		font-family: var(--font-family-secondary);
+		font-size: var(--fontSizeXL);
+		font-weight: var(--fontWeightBold);
+		font-family: var(--fontFamilySecondary);
 	}
 
 	button,
 	a {
 		display: flex;
 		align-items: center;
+	}
 
-		&:has(img) {
-			border-radius: 10rem;
-			overflow: hidden;
+	@media screen and (min-width: 500px) {
+		& > div {
+			justify-content: center;
 		}
 
-		img {
-			width: 2rem;
-			height: 2rem;
+		button.themeSwitcher {
+			position: absolute;
+			right: 0;
 		}
 	}
 }

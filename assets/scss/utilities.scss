@@ -1,4 +1,5 @@
-[class*="icon-"] {
+[class^="icon"],
+[class*=" icon"] {
 	font-family: "Material Symbols Outlined";
 	font-weight: normal;
 	font-style: normal;
@@ -12,36 +13,48 @@
 	font-feature-settings: "liga";
 	-webkit-font-feature-settings: "liga";
 	-webkit-font-smoothing: antialiased;
-}
-
-.icon-sm {
-	font-size: 1rem;
-}
-
-.icon-md {
 	font-size: 1.5rem;
 }
 
-.icon-lg {
+.iconSM {
+	font-size: 1rem;
+}
+
+.iconMD {
+	font-size: 1.5rem;
+}
+
+.iconLG {
 	font-size: 2rem;
+}
+
+[class^="widthContainer"],
+[class*=" widthContainer"] {
+	width: 100%;
+	margin: 0 auto;
+	max-width: 800px;
+}
+
+.widthContainerXS {
+	max-width: 400px;
+}
+
+.widthContainerSM {
+	max-width: 600px;
+}
+
+.widthContainerMD {
+	max-width: 800px;
+}
+
+.widthContainerLG {
+	max-width: 1000px;
+}
+
+.widthContainerXL {
+	max-width: 1200px;
 }
 
 .hidden {
 	display: none !important;
-}
-
-.width-container-sm {
-	max-width: 600px;
-}
-
-.width-container-md {
-	max-width: 800px;
-}
-
-.width-container-lg {
-	max-width: 1000px;
-}
-
-.width-container-xl {
-	max-width: 1200px;
 }
