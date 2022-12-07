@@ -1,0 +1,161 @@
+.pageWishlists {
+	gap: 1rem;
+
+	ul {
+		display: flex;
+		justify-content: center;
+		flex-wrap: wrap;
+		gap: 1rem;
+
+		text-align: center;
+
+		li a {
+			width: 100%;
+			padding: 0.5rem 1rem;
+
+			border-radius: 0.25rem;
+
+			box-shadow: 0.25rem 0.25rem 0.5rem var(--colorShadow20);
+
+			display: block;
+
+			background-color: var(--colorBase4);
+
+			&:hover,
+			&:focus {
+				background-color: var(--colorBase3);
+				transform: scale(1.05);
+			}
+
+			&:active {
+				background-color: var(--colorBase2);
+				transform: scale(0.98);
+			}
+
+			:first-child {
+				font-size: var(--fontSizeMD);
+			}
+
+			h3 {
+				font-size: var(--fontSizeLG);
+			}
+
+			:last-child {
+				font-size: var(--fontSizeSM);
+			}
+		}
+	}
+
+	& > div.scrollable {
+		width: 100%;
+
+		overflow-x: scroll;
+	}
+
+	table {
+		width: 100%;
+
+		border-spacing: 0.25rem 0.5rem;
+
+		td,
+		th {
+			border-radius: 0.25rem;
+
+			box-shadow: 0.25rem 0.25rem 0.5rem var(--colorShadow20);
+		}
+
+		td {
+			padding: 0.5rem 1rem;
+			background-color: var(--colorBase4);
+
+			& > span {
+				font-size: var(--fontSizeSM);
+				display: block;
+			}
+		}
+
+		tr:nth-child(even) td {
+			background-color: var(--colorBase5);
+		}
+
+		tr:hover td {
+			background-color: var(--colorBase6);
+		}
+
+		th {
+			padding: 0.5rem 1rem;
+
+			background-color: var(--colorBase7);
+		}
+
+		.itemCategory {
+			display: none;
+		}
+		@media screen and (min-width: 750px) {
+			.itemCategory {
+				display: table-cell;
+			}
+			.itemCategorySmall {
+				display: none;
+			}
+		}
+
+		.itemPrice {
+			display: none;
+
+			@media screen and (min-width: 600px) {
+				display: table-cell;
+			}
+		}
+
+		td.itemPrice {
+			text-align: right;
+		}
+
+		.itemMisc {
+			display: none;
+			@media screen and (min-width: 900px) {
+				display: table-cell;
+			}
+		}
+
+		.itemLink {
+			padding: 0;
+
+			overflow: hidden;
+
+			div {
+				width: 100%;
+
+				display: flex;
+				justify-content: center;
+				flex-wrap: wrap;
+
+				@media screen and (min-width: 600px) {
+					flex-wrap: nowrap;
+				}
+
+				a {
+					width: 100%;
+
+					padding: 1rem 0.25rem;
+
+					display: flex;
+					justify-content: center;
+					align-items: center;
+
+					gap: 0.5rem;
+
+					&:hover,
+					&:focus {
+						background-color: var(--colorBase8);
+					}
+
+					&:active {
+						background-color: var(--colorBase9);
+					}
+				}
+			}
+		}
+	}
+}

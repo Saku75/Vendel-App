@@ -14,7 +14,7 @@
 		<meta charset="UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Vendel.dk</title>
+		<title>Ønskeliste | Vendel.dk</title>
 
 		<link
 			href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Inter:wght@400;700&display=swap"
@@ -24,8 +24,6 @@
 			rel="stylesheet" />
 
 		<link rel="stylesheet" href="/assets/main.css" />
-
-		<script src="/assets/js/themeSwitcher.js"></script>
 	</head>
 	<body>
 		<header>
@@ -38,59 +36,31 @@
 		</header>
 		<nav>
 			<div class="widthContainerXL">
-				<ul class="right">
-					<li id="navLinkHome">
+				<ul>
+					<li>
 						<a href="/index.html">
 							<span class="iconMD"> home </span>
 							Forside
 						</a>
 					</li>
-					<li id="navLinkWishlists">
+					<li>
 						<a href="/wishlists/overview.html">
 							<span class="iconMD"> redeem </span>
 							Ønskelister
 						</a>
 					</li>
-					<li id="navLinkAdmin" class="hidden">
-						<a href="/admin.html">
-							<span class="iconMD"> admin_panel_settings </span>
-							Admin
-						</a>
-					</li>
 				</ul>
-				<button id="navBtnMenu">
-					<span class="iconMD"> menu </span>
-					Menu
-				</button>
-				<ul class="left">
-					<li id="navLinkProfile" class="hidden">
-						<a href="/profile.html">
-							<span class="iconMD"> person </span>
-							Profil
-						</a>
-					</li>
-					<li id="navLinkLogin">
-						<a href="/auth/login.html">
-							<span class="iconMD"> login </span>
-							Log ind
-						</a>
-					</li>
-					<li id="navLinkRegister">
-						<a href="/auth/register.html">
-							<span class="iconMD"> person_add </span>
-							Opret Bruger
-						</a>
-					</li>
-					<li id="navLinkLogout" class="hidden">
-						<a href="/auth/logout.html">
-							<span class="iconMD"> logout </span>
-							Log ud
-						</a>
-					</li>
-				</ul>
-			</div>
 		</nav>
-		<main></main>
+		<main>
+			<article class="pageHome widthContainerSM">
+				<h2><span>Velkommen til</span><span>Vendel.dk</span></h2>
+				<p>
+					Dette er Vendel.dk, en hjemmeside til familien Vendel. <br />
+					Her ligger ønskelister for familiemedlemmer og kommende begivenheder.
+					<small>(Dette er kun en prototype.)</small>
+				</p>
+			</article>
+		</main>
 		<footer>
 			<small>
 				<span class="iconSM"> copyright </span>
