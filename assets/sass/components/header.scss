@@ -1,0 +1,49 @@
+body > header {
+	padding: 0 clamp(1rem, 5vw, 2rem);
+
+	background: linear-gradient(45deg, var(--colorPrimary80), var(--colorSecondary80));
+
+	& > div[class*="widthContainer"] {
+		padding: 1rem 0;
+
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+
+		position: relative;
+
+		h1 {
+			font-size: var(--fontSizeXL);
+			font-weight: var(--fontWeightBold);
+			font-family: var(--fontFamilySecondary);
+		}
+
+		button,
+		a {
+			display: flex;
+			align-items: center;
+
+			&:hover,
+			&:focus {
+				color: var(--colorBase3);
+
+				text-shadow: 0 0 0.5rem var(--colorBase3);
+			}
+
+			&:active {
+				color: var(--colorBase5);
+
+				text-shadow: none;
+			}
+		}
+
+		@media screen and (min-width: 500px) {
+			justify-content: center;
+
+			& > button {
+				position: absolute;
+				right: 0;
+			}
+		}
+	}
+}

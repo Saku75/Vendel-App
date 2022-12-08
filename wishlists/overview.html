@@ -24,6 +24,8 @@
 			rel="stylesheet" />
 
 		<link rel="stylesheet" href="/assets/main.css" />
+
+		<script type="module" src="/assets/js/pages/overview.js"></script>
 	</head>
 	<body>
 		<header>
@@ -50,15 +52,46 @@
 						</a>
 					</li>
 				</ul>
+			</div>
 		</nav>
 		<main>
-			<article class="pageHome widthContainerSM">
-				<h2><span>Velkommen til</span><span>Vendel.dk</span></h2>
-				<p>
-					Dette er Vendel.dk, en hjemmeside til familien Vendel. <br />
-					Her ligger ønskelister for familiemedlemmer og kommende begivenheder.
-					<small>(Dette er kun en prototype.)</small>
-				</p>
+			<article class="pageOverview widthContainerXL">
+				<h2>Ønskelister</h2>
+				<ul id="wishlists"></ul>
+				<button id="create">
+					<span class="iconLG"> add </span>
+					Opret ny ønskeliste
+				</button>
+			</article>
+			<article id="modal" class="modalOverview hidden">
+				<div class="widthContainerMD">
+					<div class="header">
+						<h2>Ønskeliste</h2>
+						<button id="close" class="iconLG">close</button>
+					</div>
+					<form id="wishlistForm" novalidate>
+						<label>
+							Ønskeliste Navn
+							<input type="text" id="wishlistName" name="wishlistName" data-type="name" required />
+							<span class="errorMessage"></span>
+						</label>
+						<label>
+							Ønskeliste Dato
+							<input type="date" id="wishlistDate" name="wishlistDate" data-type="date" required />
+							<span class="errorMessage"></span>
+						</label>
+					</form>
+					<div class="actions">
+						<button id="delete" class="hidden">
+							<span class="iconMD"> delete </span>
+							Slet
+						</button>
+						<button id="submit" type="submit" form="wishlistForm">
+							<span class="iconMD"> add </span>
+							Opret
+						</button>
+					</div>
+				</div>
 			</article>
 		</main>
 		<footer>

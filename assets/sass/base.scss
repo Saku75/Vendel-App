@@ -1,0 +1,101 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+
+	// border: 1px solid red;
+}
+
+body {
+	min-height: 100vh;
+
+	overflow: overlay;
+
+	display: flex;
+	flex-direction: column;
+
+	font-family: var(--fontFamilyPrimary);
+	font-size: 16px;
+	color: var(--colorText);
+
+	background-color: var(--colorBase1);
+}
+
+body > header,
+body > nav {
+	a,
+	button {
+		transition: color 0.2s, transform 0.2s, text-shadow 0.2s;
+
+		&:hover,
+		&:focus {
+			color: var(--colorPrimary100);
+			transform: scale(1.1);
+
+			text-shadow: 0 0 0.5rem var(--colorPrimary100);
+		}
+
+		&:active {
+			color: var(--colorSecondary100);
+			transform: scale(0.95);
+
+			text-shadow: none;
+		}
+	}
+}
+
+a,
+a:visited {
+	color: inherit;
+	text-decoration: none;
+}
+
+button {
+	color: inherit;
+	font-size: inherit;
+	font-family: inherit;
+	cursor: pointer;
+	background: none;
+	border: none;
+}
+
+input {
+	color: var(--colorText);
+	font-size: inherit;
+	font-family: inherit;
+	background: none;
+	border: none;
+	display: block;
+}
+
+small {
+	font-size: var(--fontSizeSM);
+}
+
+ul {
+	list-style: none;
+}
+
+main {
+	padding: 2rem clamp(1rem, 5vw, 2rem);
+}
+
+::-webkit-scrollbar {
+	width: 1rem;
+}
+
+::-webkit-scrollbar-thumb {
+	border: 0.25rem solid transparent;
+	border-radius: 1rem;
+
+	background-color: var(--colorShadow50);
+	background-clip: content-box;
+
+	&:hover {
+		background-color: var(--colorPrimary50);
+	}
+
+	&:active {
+		background-color: var(--colorSecondary50);
+	}
+}

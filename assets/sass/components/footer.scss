@@ -1,0 +1,17 @@
+body > footer {
+	padding: 0 clamp(1rem, 5vw, 2rem);
+	margin-top: auto;
+
+	display: flex;
+	justify-content: center;
+
+	background-color: var(--colorBase3);
+
+	& > small {
+		padding: 0.25rem 0;
+
+		display: flex;
+		align-items: center;
+		gap: 0.25rem;
+	}
+}

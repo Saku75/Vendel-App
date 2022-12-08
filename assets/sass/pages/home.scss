@@ -1,0 +1,18 @@
+.pageHome {
+	text-align: center;
+
+	h2 {
+		font-size: var(--fontSizeLG);
+
+		span {
+			display: block;
+
+			font-size: var(--fontSizeXL);
+			font-family: var(--fontFamilySecondary);
+		}
+	}
+
+	small {
+		display: block;
+	}
+}

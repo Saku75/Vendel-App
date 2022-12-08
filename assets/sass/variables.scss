@@ -1,0 +1,98 @@
+:root {
+	--colorLight: #f7f7f7;
+	--colorDark: #202020;
+
+	--colorPrimary100: #19bcef;
+	--colorPrimary90: #19bcefe6;
+	--colorPrimary80: #19bcefcc;
+	--colorPrimary70: #19bcefb3;
+	--colorPrimary60: #19bcef99;
+	--colorPrimary50: #19bcef80;
+
+	--colorSecondary100: #c03fed;
+	--colorSecondary90: #c03fede6;
+	--colorSecondary80: #c03fedcc;
+	--colorSecondary70: #c03fedb3;
+	--colorSecondary60: #c03fed99;
+	--colorSecondary50: #c03fed80;
+
+	--colorSuccess100: #167520;
+	--colorSuccess90: #167520e6;
+	--colorSuccess80: #167520cc;
+	--colorSuccess70: #167520b3;
+	--colorSuccess60: #16752099;
+
+	--colorDanger100: #d61818;
+	--colorDanger90: #d61818e6;
+	--colorDanger80: #d61818cc;
+	--colorDanger70: #d61818b3;
+	--colorDanger60: #d6181899;
+
+	--colorWarning100: #e49804;
+	--colorWarning90: #e49804e6;
+	--colorWarning80: #e49804cc;
+	--colorWarning70: #e49804b3;
+	--colorWarning60: #e4980499;
+
+	--colorInfo100: #3263c2;
+	--colorInfo90: #3263c2e6;
+	--colorInfo80: #3263c2cc;
+	--colorInfo70: #3263c2b3;
+	--colorInfo60: #3263c299;
+
+	--colorMuted100: #9595a0;
+	--colorMuted90: #9595a0e6;
+	--colorMuted80: #9595a0cc;
+	--colorMuted70: #9595a0b3;
+	--colorMuted60: #9595a099;
+
+	--colorShadow50: #00000080;
+	--colorShadow40: #00000066;
+	--colorShadow30: #0000004d;
+	--colorShadow20: #00000033;
+	--colorShadow10: #0000001a;
+
+	--fontSizeXS: 0.5rem;
+	--fontSizeSM: 0.75rem;
+	--fontSizeMD: 1rem;
+	--fontSizeLG: 1.5rem;
+	--fontSizeXL: 3rem;
+
+	--fontWeightRegular: 400;
+	--fontWeightBold: 700;
+
+	--fontFamilyPrimary: "Inter", sansSerif;
+	--fontFamilySecondary: "Dancing Script", cursive;
+
+	&.light {
+		--colorBase1: #f7f7f7;
+		--colorBase2: #f0f0f0;
+		--colorBase3: #e7e7e7;
+		--colorBase4: #e0e0e0;
+		--colorBase5: #d7d7d7;
+		--colorBase6: #d0d0d0;
+		--colorBase7: #c7c7c7;
+		--colorBase8: #c0c0c0;
+		--colorBase9: #b7b7b7;
+		--colorBase10: #b0b0b0;
+
+		--colorText: #202020;
+		--colorTextInv: #f7f7f7;
+	}
+
+	&.dark {
+		--colorBase1: #202020;
+		--colorBase2: #272727;
+		--colorBase3: #303030;
+		--colorBase4: #373737;
+		--colorBase5: #404040;
+		--colorBase6: #474747;
+		--colorBase7: #505050;
+		--colorBase8: #575757;
+		--colorBase9: #606060;
+		--colorBase10: #676767;
+
+		--colorText: #f7f7f7;
+		--colorTextInv: #202020;
+	}
+}

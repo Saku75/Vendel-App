@@ -1,0 +1,133 @@
+.pageOverview {
+	align-items: center;
+
+	text-align: center;
+
+	h2 {
+		font-size: var(--fontSizeLG);
+	}
+
+	& > button {
+		width: 100%;
+		min-width: 250px;
+		max-width: 350px;
+		padding: 1rem 2rem;
+
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.25rem;
+
+		border-radius: 0.25rem;
+
+		background-color: var(--colorBase4);
+
+		box-shadow: 0.25rem 0.25rem 0.5rem var(--colorShadow20);
+
+		transition: box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out;
+
+		&:hover,
+		&:focus {
+			background: linear-gradient(45deg, var(--colorPrimary80), var(--colorSecondary80));
+
+			transform: scale(1.05);
+
+			box-shadow: 0.25rem 0.25rem 0.5rem var(--colorShadow40);
+		}
+
+		&:active {
+			transform: scale(0.95);
+
+			box-shadow: none;
+		}
+	}
+
+	ul {
+		width: 100%;
+
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 1rem;
+
+		li {
+			min-width: 250px;
+
+			flex: 1;
+
+			position: relative;
+
+			background-color: var(--colorBase4);
+
+			border-radius: 0.25rem;
+
+			box-shadow: 0.25rem 0.25rem 0.5rem var(--colorShadow20);
+
+			transition: box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out;
+
+			&:hover,
+			&:focus {
+				background: linear-gradient(45deg, var(--colorPrimary80), var(--colorSecondary80));
+
+				transform: scale(1.05);
+
+				box-shadow: 0.25rem 0.25rem 0.5rem var(--colorShadow40);
+			}
+
+			& > a {
+				width: 100%;
+				padding: 1rem 2rem;
+
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				gap: 0.25rem;
+
+				& > h3 {
+					font-size: var(--fontSizeLG);
+				}
+
+				& > .date {
+					font-size: var(--fontSizeMD);
+				}
+
+				& > .lastUpdated {
+					font-size: var(--fontSizeSM);
+				}
+			}
+
+			button[class^="icon"],
+			button[class*=" icon"] {
+				padding: 0.25rem;
+
+				position: absolute;
+				top: 0.25rem;
+				right: 0.25rem;
+
+				border-radius: 0.25rem;
+
+				z-index: 1;
+
+				transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out,
+					box-shadow 0.2s ease-in-out;
+
+				&:hover,
+				&:focus {
+					background-color: var(--colorBase5);
+
+					transform: scale(1.1);
+
+					box-shadow: 0.25rem 0.25rem 0.5rem var(--colorShadow20);
+				}
+
+				&:active {
+					background-color: var(--colorBase4);
+
+					transform: scale(0.95);
+
+					box-shadow: none;
+				}
+			}
+		}
+	}
+}
