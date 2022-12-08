@@ -16,9 +16,6 @@ import Wish from "./routes/wish.js";
 // Import settings from .env file
 dotenv.config();
 
-// Set TZ to Europe/Copenhagen
-process.env.TZ = "Europe/Copenhagen";
-
 // Check if PORT is set
 if (process.env.PORT === undefined) {
 	throw new Error("PORT is not set.");
@@ -30,7 +27,7 @@ const app: express.Application = express();
 // Use node modules
 app.use(bodyParser.json());
 app.use(cookieParser());
-app.use(cors());
+app.use(cors({ origin: "https://v2.vendel.dk" }));
 app.use(helmet());
 app.use(morgan("combined"));
 
@@ -714,8 +711,6 @@ function sendResponse(responseFunction: express.Response, responseDetails: Respo
 	if (responseDetails.data !== undefined) {
 		response.data = responseDetails.data;
 	}
-
-	console.log(response);
 
 	// Send the response
 	responseFunction.status(response.status).json(response);
