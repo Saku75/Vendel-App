@@ -18,7 +18,7 @@ namespace Wishlist {
 		Property: apiEndpoint
 		Description: The api endpoint.
 	*/
-	const apiEndpoint: string = "http://127.0.0.1:5000/";
+	const apiEndpoint: string = "/api/";
 
 	/*
 		Interface: WishlistItem
