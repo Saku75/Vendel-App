@@ -4,26 +4,35 @@
 */
 class Validate {
 	/*
-		Method: id
-		Description: Validates an id, which is a number or can be converted to a number.
+		Method: number
+		Description: Validates an number or a string that can be converted to a number.
 		Parameters:
 			- value: string
 	*/
-	public id(value: string | number): boolean {
-		// Check if the value is a number
-		if (typeof value === "number") {
-			// Return true
-			return true;
+	public number(value: string): boolean {
+		// Check if the value is a not a number
+		if (typeof value !== "number") {
+			// Check if the value is a not a string
+			if (typeof value !== "string") {
+				// Return false
+				return false;
+			}
+
+			// Check if the value is empty
+			if (value.length === 0) {
+				// Return false
+				return false;
+			}
+
+			// Check if the value is a number
+			if (isNaN(Number(value))) {
+				// Return false
+				return false;
+			}
 		}
 
-		// Check if the value can be converted to a number
-		if (typeof value === "string" && !isNaN(Number(value))) {
-			// Return true
-			return true;
-		}
-
-		// Return false
-		return false;
+		// Return true
+		return true;
 	}
 
 	/*
@@ -82,6 +91,41 @@ class Validate {
 
 		// Check if the value is a valid date
 		if (isNaN(Date.parse(value))) {
+			// Return false
+			return false;
+		}
+
+		// Return true
+		return true;
+	}
+
+	/*
+		Method: link
+		Description: Validates if a link is properly formatted.
+		Parameters:
+			- value: string
+	*/
+	public link(value: string): boolean {
+		// Check if the value is a not a string
+		if (typeof value !== "string") {
+			// Return false
+			return false;
+		}
+
+		// Check if the value is empty
+		if (value.length === 0) {
+			// Return false
+			return false;
+		}
+
+		// Check if the value contains sql or html characters
+		if (/['";<>]/.test(value)) {
+			// Return false
+			return false;
+		}
+
+		// Check if the value is a valid link
+		if (!/^https?:\/\//.test(value)) {
 			// Return false
 			return false;
 		}

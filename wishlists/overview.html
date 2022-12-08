@@ -25,15 +25,15 @@
 
 		<link rel="stylesheet" href="/assets/main.css" />
 
+		<script type="module" src="/assets/js/main.js"></script>
+
 		<script type="module" src="/assets/js/pages/overview.js"></script>
 	</head>
 	<body>
 		<header>
 			<div class="widthContainerXL">
 				<h1><a href="/index.html">Vendel.dk</a></h1>
-				<button class="themeSwitcher" aria-label="Skift sidens tema">
-					<span class="iconLG"> dark_mode </span>
-				</button>
+				<button id="themeSwitcher" class="iconLG" aria-label="Skift sidens tema"></button>
 			</div>
 		</header>
 		<nav>
@@ -55,7 +55,7 @@
 			</div>
 		</nav>
 		<main>
-			<article class="pageOverview widthContainerXL">
+			<article class="pageWishlists widthContainerXL">
 				<h2>Ønskelister</h2>
 				<ul id="wishlists"></ul>
 				<button id="create">
@@ -63,7 +63,7 @@
 					Opret ny ønskeliste
 				</button>
 			</article>
-			<article id="modal" class="modalOverview hidden">
+			<article id="modal" class="modalWishlists hidden">
 				<div class="widthContainerMD">
 					<div class="header">
 						<h2>Ønskeliste</h2>
@@ -72,7 +72,13 @@
 					<form id="wishlistForm" novalidate>
 						<label>
 							Ønskeliste Navn
-							<input type="text" id="wishlistName" name="wishlistName" data-type="name" required />
+							<input
+								type="text"
+								id="wishlistName"
+								name="wishlistName"
+								data-type="name"
+								required
+								placeholder="F.eks. 'Jul 2022'" />
 							<span class="errorMessage"></span>
 						</label>
 						<label>

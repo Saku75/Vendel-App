@@ -1,5 +1,4 @@
-// Import validation functions
-import Validate from "../validate.js";
+// Import modules
 import Wishlist from "../wishlist.js";
 
 // Get all elements
@@ -15,6 +14,12 @@ const wishlistApi = new Wishlist.Api();
 
 // Create a new wishlist elements instance
 const wishlistElements = new Wishlist.Elements();
+
+// Fetch all wishlists
+wishlistApi.getAll().then((response) => {
+	if (wishlists && wishlistModal)
+		wishlistElements.createList(wishlists, response.data, wishlistModal);
+});
 
 // Add event listener to the wishlist form
 if (wishlistForm)
@@ -97,9 +102,3 @@ if (deleteBtn)
 			});
 		}
 	});
-
-// Fetch all wishlists
-wishlistApi.getAll().then((response) => {
-	if (wishlists && wishlistModal)
-		wishlistElements.createList(wishlists, response.data, wishlistModal);
-});

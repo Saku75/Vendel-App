@@ -11,6 +11,7 @@ import dotenv from "dotenv";
 import Validate from "./validate.js";
 import MariaDB from "./mariaDB.js";
 import Wishlist from "./routes/wishlist.js";
+import Wish from "./routes/wish.js";
 
 // Import settings from .env file
 dotenv.config();
@@ -47,6 +48,9 @@ const connector = new MariaDB.Connector({
 
 // Create a new Wishlist instance
 const wishlist = new Wishlist(connector);
+
+// Create a new Wish instance
+const wish = new Wish(connector);
 
 /*
 	Interface: Response
@@ -305,6 +309,381 @@ app.delete(
 		sendResponse(response, {
 			status: 200,
 			message: "Deleted wishlist.",
+			date: new Date().toISOString(),
+			data: result,
+		});
+	}
+);
+
+/*
+	Endpoint: GET /wishlists/:wishlist_id/wishes
+	Description: Gets all items from a wishlist.
+*/
+app.get(
+	"/wishlists/:wishlist_id/wishes",
+	async (request: express.Request, response: express.Response) => {
+		// Get the wishlist id
+		const wishlistId = Number(request.params.wishlist_id);
+
+		// Check if the wishlist id is valid
+		if (!validate.number(request.params.wishlist_id)) {
+			// Send a response
+			sendResponse(response, {
+				status: 400,
+				message: "Bad request.",
+				date: new Date().toISOString(),
+			});
+			return;
+		}
+
+		// Check if the wishlist exists
+		if (!(await wishlist.exists(wishlistId))) {
+			// Send a response
+			sendResponse(response, {
+				status: 404,
+				message: "Wishlist not found.",
+				date: new Date().toISOString(),
+			});
+			return;
+		}
+
+		// Get all items from the wishlist
+		const result = await wish.getAll(wishlistId);
+
+		// Check if the result is undefined
+		if (result === undefined) {
+			// Send a response
+			sendResponse(response, {
+				status: 500,
+				message: "Internal server error.",
+				date: new Date().toISOString(),
+			});
+			return;
+		}
+
+		// Send a response
+		sendResponse(response, {
+			status: 200,
+			message: "Got all items from wishlist.",
+			date: new Date().toISOString(),
+			data: result,
+		});
+	}
+);
+
+/*
+	Endpoint: GET /wishlists/:wishlist_id/wishes/:wish_id
+	Description: Gets a wish from a wishlist.
+*/
+app.get(
+	"/wishlists/:wishlist_id/wishes/:wish_id",
+	async (request: express.Request, response: express.Response) => {
+		// Get the wishlist id
+		const wishlistId = Number(request.params.wishlist_id);
+
+		// Get the wish id
+		const wishId = Number(request.params.wish_id);
+
+		// Check if the wishlist id and wish id are valid
+		if (!validate.number(request.params.wishlist_id) || !validate.number(request.params.wish_id)) {
+			// Send a response
+			sendResponse(response, {
+				status: 400,
+				message: "Bad request.",
+				date: new Date().toISOString(),
+			});
+			return;
+		}
+
+		// Check if the wishlist exists
+		if (!(await wishlist.exists(wishlistId))) {
+			// Send a response
+			sendResponse(response, {
+				status: 404,
+				message: "Wishlist not found.",
+				date: new Date().toISOString(),
+			});
+			return;
+		}
+
+		// Check if the wish exists
+		if (!(await wish.exists(wishlistId, wishId))) {
+			// Send a response
+			sendResponse(response, {
+				status: 404,
+				message: "Wish not found.",
+				date: new Date().toISOString(),
+			});
+			return;
+		}
+
+		// Get the wish
+		const result = await wish.get(wishlistId, wishId);
+
+		// Check if the result is undefined
+		if (result === undefined) {
+			// Send a response
+			sendResponse(response, {
+				status: 500,
+				message: "Internal server error.",
+				date: new Date().toISOString(),
+			});
+			return;
+		}
+
+		// Send a response
+		sendResponse(response, {
+			status: 200,
+			message: "Got wish.",
+			date: new Date().toISOString(),
+			data: result,
+		});
+	}
+);
+
+/*
+	Endpoint: POST /wishlists/:wishlist_id/wishes
+	Description: Creates a wish.
+*/
+app.post(
+	"/wishlists/:wishlist_id/wishes",
+	async (request: express.Request, response: express.Response) => {
+		// Get the wishlist id
+		const wishlistId = Number(request.params.wishlist_id);
+
+		// Check if the wishlist id is valid
+		if (!validate.number(request.params.wishlist_id)) {
+			// Send a response
+			sendResponse(response, {
+				status: 400,
+				message: "Bad request.",
+				date: new Date().toISOString(),
+			});
+			return;
+		}
+
+		// Check if the wishlist exists
+		if (!(await wishlist.exists(wishlistId))) {
+			// Send a response
+			sendResponse(response, {
+				status: 404,
+				message: "Wishlist not found.",
+				date: new Date().toISOString(),
+			});
+			return;
+		}
+
+		// Get wish name
+		const wishName = request.body.wish_name;
+
+		// Get wish price
+		const wishPrice = Number(request.body.wish_price);
+
+		// Get wish link
+		const wishLink = request.body.wish_link;
+
+		// Check if the wish name, price and link are valid
+		if (
+			!validate.name(wishName) ||
+			!validate.number(request.body.wish_price) ||
+			!validate.link(wishLink)
+		) {
+			// Send a response
+			sendResponse(response, {
+				status: 400,
+				message: "Bad request.",
+				date: new Date().toISOString(),
+			});
+			return;
+		}
+
+		// Create the wish
+		const result = await wish.create(wishlistId, wishName, wishPrice, wishLink);
+
+		// Check if the result is undefined
+		if (result === undefined) {
+			// Send a response
+			sendResponse(response, {
+				status: 500,
+				message: "Internal server error.",
+				date: new Date().toISOString(),
+			});
+			return;
+		}
+
+		// Update the wishlist last updated date
+		await wishlist.updateLastUpdated(wishlistId);
+
+		// Send a response
+		sendResponse(response, {
+			status: 201,
+			message: "Created wish.",
+			date: new Date().toISOString(),
+			data: result,
+		});
+	}
+);
+
+/*
+	Endpoint: PUT /wishlists/:wishlist_id/wishes/:wish_id
+	Description: Updates a wish.
+*/
+app.put(
+	"/wishlists/:wishlist_id/wishes/:wish_id",
+	async (request: express.Request, response: express.Response) => {
+		// Get the wishlist id and wish id
+		const wishlistId = Number(request.params.wishlist_id);
+		const wishId = Number(request.params.wish_id);
+
+		// Check if the wishlist id and wish id are valid
+		if (!validate.number(request.params.wishlist_id) || !validate.number(request.params.wish_id)) {
+			// Send a response
+			sendResponse(response, {
+				status: 400,
+				message: "Bad request.",
+				date: new Date().toISOString(),
+			});
+			return;
+		}
+
+		// Check if the wishlist exists
+		if (!(await wishlist.exists(wishlistId))) {
+			// Send a response
+			sendResponse(response, {
+				status: 404,
+				message: "Wishlist not found.",
+				date: new Date().toISOString(),
+			});
+			return;
+		}
+
+		// Check if the wish exists
+		if (!(await wish.exists(wishlistId, wishId))) {
+			// Send a response
+			sendResponse(response, {
+				status: 404,
+				message: "Wish not found.",
+				date: new Date().toISOString(),
+			});
+			return;
+		}
+
+		// Get wish name
+		const wishName = request.body.wish_name;
+
+		// Get wish price
+		const wishPrice = Number(request.body.wish_price);
+
+		// Get wish link
+		const wishLink = request.body.wish_link;
+
+		// Check if the wish name, price and link are valid
+		if (
+			!validate.name(wishName) ||
+			!validate.number(request.body.wish_price) ||
+			!validate.link(wishLink)
+		) {
+			// Send a response
+			sendResponse(response, {
+				status: 400,
+				message: "Bad request.",
+				date: new Date().toISOString(),
+			});
+			return;
+		}
+
+		// Update the wish
+		const result = await wish.update(wishlistId, wishId, wishName, wishPrice, wishLink);
+
+		// Check if the result is undefined
+		if (result === undefined) {
+			// Send a response
+			sendResponse(response, {
+				status: 500,
+				message: "Internal server error.",
+				date: new Date().toISOString(),
+			});
+			return;
+		}
+
+		// Update the wishlist last updated date
+		await wishlist.updateLastUpdated(wishlistId);
+
+		// Send a response
+		sendResponse(response, {
+			status: 200,
+			message: "Updated wish.",
+			date: new Date().toISOString(),
+			data: result,
+		});
+	}
+);
+
+/*
+	Endpoint: DELETE /wishlists/:wishlist_id/wishes/:wish_id
+	Description: Deletes a wish.
+*/
+app.delete(
+	"/wishlists/:wishlist_id/wishes/:wish_id",
+	async (request: express.Request, response: express.Response) => {
+		// Get the wishlist id and wish id
+		const wishlistId = Number(request.params.wishlist_id);
+		const wishId = Number(request.params.wish_id);
+
+		// Check if the wishlist id and wish id are valid
+		if (!validate.number(request.params.wishlist_id) || !validate.number(request.params.wish_id)) {
+			// Send a response
+			sendResponse(response, {
+				status: 400,
+				message: "Bad request.",
+				date: new Date().toISOString(),
+			});
+			return;
+		}
+
+		// Check if the wishlist exists
+		if (!(await wishlist.exists(wishlistId))) {
+			// Send a response
+			sendResponse(response, {
+				status: 404,
+				message: "Wishlist not found.",
+				date: new Date().toISOString(),
+			});
+			return;
+		}
+
+		// Check if the wish exists
+		if (!(await wish.exists(wishlistId, wishId))) {
+			// Send a response
+			sendResponse(response, {
+				status: 404,
+				message: "Wish not found.",
+				date: new Date().toISOString(),
+			});
+			return;
+		}
+
+		// Delete the wish
+		const result = await wish.delete(wishlistId, wishId);
+
+		// Check if the result is undefined
+		if (result === undefined) {
+			// Send a response
+			sendResponse(response, {
+				status: 500,
+				message: "Internal server error.",
+				date: new Date().toISOString(),
+			});
+			return;
+		}
+
+		// Update the wishlist last updated date
+		await wishlist.updateLastUpdated(wishlistId);
+
+		// Send a response
+		sendResponse(response, {
+			status: 200,
+			message: "Deleted wish.",
 			date: new Date().toISOString(),
 			data: result,
 		});

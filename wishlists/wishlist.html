@@ -14,7 +14,7 @@
 		<meta charset="UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Ønskeliste | Vendel.dk</title>
+		<title class="changeTitle">Ønskeliste | Vendel.dk</title>
 
 		<link
 			href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Inter:wght@400;700&display=swap"
@@ -24,14 +24,16 @@
 			rel="stylesheet" />
 
 		<link rel="stylesheet" href="/assets/main.css" />
+
+		<script type="module" src="/assets/js/main.js"></script>
+
+		<script type="module" src="/assets/js/pages/wishlist.js"></script>
 	</head>
 	<body>
 		<header>
 			<div class="widthContainerXL">
 				<h1><a href="/index.html">Vendel.dk</a></h1>
-				<button class="themeSwitcher" aria-label="Skift sidens tema">
-					<span class="iconLG"> dark_mode </span>
-				</button>
+				<button id="themeSwitcher" class="iconLG" aria-label="Skift sidens tema"></button>
 			</div>
 		</header>
 		<nav>
@@ -53,13 +55,67 @@
 			</div>
 		</nav>
 		<main>
-			<article class="pageWishlist widthContainerSM">
-				<h2><span>Velkommen til</span><span>Vendel.dk</span></h2>
-				<p>
-					Dette er Vendel.dk, en hjemmeside til familien Vendel. <br />
-					Her ligger ønskelister for familiemedlemmer og kommende begivenheder.
-					<small>(Dette er kun en prototype)</small>
-				</p>
+			<article class="pageWishlists wishlist widthContainerSM">
+				<h2 class="changeTitle">Ønskeliste</h2>
+				<ul id="wishes"></ul>
+				<button id="create">
+					<span class="iconLG"> add </span>
+					Opret nyt ønske
+				</button>
+			</article>
+			<article id="modal" class="modalWishlists hidden">
+				<div class="widthContainerMD">
+					<div class="header">
+						<h2>Ønskeliste</h2>
+						<button id="close" class="iconLG">close</button>
+					</div>
+					<form id="wishForm" novalidate>
+						<label>
+							Ønske Navn
+							<input
+								type="text"
+								id="wishName"
+								name="wishName"
+								data-type="name"
+								required
+								placeholder="f.eks. 'Nintendo Switch'" />
+							<span class="errorMessage"></span>
+						</label>
+						<label>
+							Ønske Pris
+							<input
+								type="number"
+								id="wishPrice"
+								name="wishPrice"
+								data-type="price"
+								required
+								placeholder="f.eks. '2999'" />
+							<span class="errorMessage"></span>
+						</label>
+						<label>
+							Ønske Link
+							<input
+								type="url"
+								id="wishLink"
+								name="wishLink"
+								data-type="link"
+								required
+								placeholder="f.eks. 'https://www.nintendo.com/switch/'" />
+							<span class="errorMessage"></span>
+						</label>
+						<input type="hidden" name="wishlistId" id="wishlistId" />
+					</form>
+					<div class="actions">
+						<button id="delete" class="hidden">
+							<span class="iconMD"> delete </span>
+							Slet
+						</button>
+						<button id="submit" type="submit" form="wishForm">
+							<span class="iconMD"> add </span>
+							Opret
+						</button>
+					</div>
+				</div>
 			</article>
 		</main>
 		<footer>

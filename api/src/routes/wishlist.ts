@@ -196,7 +196,7 @@ class Wishlist extends MariaDB.Base {
 		try {
 			// Query the database
 			const result = await this.connector.preparedQuery(
-				"UPDATE wishlists SET last_updated = NOW() WHERE wishlist_id = ?",
+				"UPDATE wishlists SET wishlist_last_updated = NOW() WHERE wishlist_id = ?",
 				[wishlist_id]
 			);
 

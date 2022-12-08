@@ -22,19 +22,6 @@ body > header {
 		a {
 			display: flex;
 			align-items: center;
-
-			&:hover,
-			&:focus {
-				color: var(--colorBase3);
-
-				text-shadow: 0 0 0.5rem var(--colorBase3);
-			}
-
-			&:active {
-				color: var(--colorBase5);
-
-				text-shadow: none;
-			}
 		}
 
 		@media screen and (min-width: 500px) {

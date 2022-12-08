@@ -29,14 +29,13 @@ body > nav {
 
 		&:hover,
 		&:focus {
-			color: var(--colorPrimary100);
+			color: var(--colorText);
 			transform: scale(1.1);
 
-			text-shadow: 0 0 0.5rem var(--colorPrimary100);
+			text-shadow: 0 0 0.5rem var(--colorText);
 		}
 
 		&:active {
-			color: var(--colorSecondary100);
 			transform: scale(0.95);
 
 			text-shadow: none;

@@ -98,6 +98,41 @@ class Validate {
 		// Return true
 		return true;
 	}
+
+	/*
+		Method: link
+		Description: Validates if a link is properly formatted.
+		Parameters:
+			- value: string
+	*/
+	public link(value: string): boolean {
+		// Check if the value is a not a string
+		if (typeof value !== "string") {
+			// Return false
+			return false;
+		}
+
+		// Check if the value is empty
+		if (value.length === 0) {
+			// Return false
+			return false;
+		}
+
+		// Check if the value contains sql or html characters
+		if (/['";<>]/.test(value)) {
+			// Return false
+			return false;
+		}
+
+		// Check if the value is a valid link
+		if (!/^https?:\/\//.test(value)) {
+			// Return false
+			return false;
+		}
+
+		// Return true
+		return true;
+	}
 }
 
 // Export the class

@@ -16,7 +16,7 @@ import Validate from "./validate.js";
 namespace Wishlist {
 	/*
 		Property: apiEndpoint
-		Description: The id of the wishlist.
+		Description: The api endpoint.
 	*/
 	const apiEndpoint: string = "http://127.0.0.1:5000/";
 
@@ -164,6 +164,7 @@ namespace Wishlist {
 			Parameters:
 				- container: HTMLElement - The container to create the list in.
 				- wishlists: WishlistItem[] - The wishlists to create a list of.
+				- formContainer: HTMLElement - The container that holds the form.
 		*/
 		public createList(
 			container: HTMLElement,
@@ -182,6 +183,7 @@ namespace Wishlist {
 				const wishlistEdit = document.createElement("button");
 				wishlistEdit.classList.add("iconMD");
 				wishlistEdit.innerText = "settings";
+				wishlistEdit.ariaLabel = "Rediger ønskeliste";
 				wishlistEdit.dataset.id = String(wishlist.wishlist_id);
 				wishlistEdit.addEventListener("click", (event: Event) => {
 					// Get the id of the wishlist
@@ -229,25 +231,31 @@ namespace Wishlist {
 				- container: HTMLElement - The container to create the form in.
 				- wishlist_id: number | undefined - The id of the wishlist to edit, or undefined if creating a new wishlist.
 		*/
-		public async openForm(container: HTMLElement, wishlist_id: number | undefined): Promise<void> {
+		public async openForm(container: HTMLElement, wishlist_id?: number): Promise<void> {
 			// Remove hidden class from the container
 			container.classList.remove("hidden");
 
 			// Query delete button
 			const deleteButton = container.querySelector("#delete") as HTMLButtonElement;
 
+			// Query submit button
+			const submitButton = container.querySelector("#submit") as HTMLButtonElement;
+
 			// Query the form and form inputs
 			const form = container.querySelector("form") as HTMLFormElement;
 			const nameInput = form.querySelector("#wishlistName") as HTMLInputElement;
 			const dateInput = form.querySelector("#wishlistDate") as HTMLInputElement;
 
-			// If the wishlist id is set, get the wishlist from the api
+			// Set date input value to today
+			dateInput.value = new Date().toISOString().split("T")[0];
+
+			// If the wishlist id is set, get the wishlist from the API
 			const wishlistData = wishlist_id ? await new Api().get(wishlist_id) : undefined;
 
 			// If wishlist data is set, remove the hidden class from the delete button and set the values of the form
 			if (wishlistData) {
 				deleteButton.classList.remove("hidden");
-				deleteButton.setAttribute("data-id", String(wishlistData.data.wishlist_id));
+				deleteButton.dataset.id = String(wishlistData.data.wishlist_id);
 
 				nameInput.value = wishlistData.data.wishlist_name;
 				dateInput.value = new Date(wishlistData.data.wishlist_date).toISOString().split("T")[0];
@@ -258,6 +266,9 @@ namespace Wishlist {
 				idInput.name = "wishlistId";
 				idInput.value = String(wishlistData.data.wishlist_id);
 				form.appendChild(idInput);
+
+				// Change the text of the submit button
+				submitButton.innerHTML = '<span class="iconMD"> save </span>Gem';
 			} else if (wishlist_id && !wishlistData) {
 				window.location.reload();
 			}
@@ -273,19 +284,38 @@ namespace Wishlist {
 			// Add hidden class to the container
 			container.classList.add("hidden");
 
+			// Query all label elements
+			const labels = container.querySelectorAll("label") as NodeListOf<HTMLLabelElement>;
+
+			// Remove the error class from all labels
+			labels.forEach((label) => {
+				label.classList.remove("error");
+			});
+
 			// Query delete button
 			const deleteButton = container.querySelector("#delete") as HTMLButtonElement;
+
+			// Query submit button
+			const submitButton = container.querySelector("#submit") as HTMLButtonElement;
 
 			// Query the form
 			const form = container.querySelector("form") as HTMLFormElement;
 
 			// Reset form inputs and remove the hidden input
 			form.reset();
-			form.querySelector("input[name='wishlistId']")?.remove();
+
+			// Remove the hidden input
+			const idInput = form.querySelector("input[type=hidden]") as HTMLInputElement;
+			if (idInput) {
+				idInput.remove();
+			}
 
 			// Add hidden class to the delete button
 			deleteButton.classList.add("hidden");
 			deleteButton.removeAttribute("data-id");
+
+			// Change the text of the submit button
+			submitButton.innerHTML = '<span class="iconMD"> add </span>Opret';
 		}
 
 		/*
@@ -301,7 +331,7 @@ namespace Wishlist {
 			// Query all label elements
 			const labels = form.querySelectorAll("label");
 
-			// Declare error variable
+			// Declare valid variable
 			let valid = true;
 
 			// Loop through the labels
@@ -312,7 +342,7 @@ namespace Wishlist {
 				// Get the error message element
 				const errorMessage = label.querySelector(".errorMessage") as HTMLElement;
 
-				// If the input is required and empty, add error class
+				// If the input is required and empty, add error class and set valid to false
 				if (input.required && input.value === "") {
 					label.classList.add("error");
 

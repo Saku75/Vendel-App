@@ -10,6 +10,7 @@ import MariaDB from "../mariaDB.js";
 		- wish_name: varchar(100)
 		- wish_price: decimal(10,2)
 		- wish_link: text
+		- wish_last_updated: dateTime
 */
 
 /*
@@ -17,6 +18,31 @@ import MariaDB from "../mariaDB.js";
 	Description: The Wish class, which contains all the methods for the wish table.
 */
 class Wish extends MariaDB.Base {
+	/*
+		Method: getAll
+		Description: Gets all wishes from a wishlist.
+		Parameters:
+			- wishlist_id: number
+	*/
+	public async getAll(wishlist_id: number): Promise<any | undefined> {
+		try {
+			// Query the database
+			const result = await this.connector.preparedQuery(
+				"SELECT * FROM wishes WHERE wishlist_id = ?",
+				[wishlist_id]
+			);
+
+			// Return the result
+			return result;
+		} catch (error) {
+			// Log the error
+			console.error(error);
+
+			// Return undefined
+			return undefined;
+		}
+	}
+
 	/*
 		Method: get
 		Description: Gets a wish.
@@ -33,7 +59,7 @@ class Wish extends MariaDB.Base {
 			);
 
 			// Return the result
-			return result;
+			return result[0];
 		} catch (error) {
 			// Log the error
 			console.error(error);
@@ -48,26 +74,25 @@ class Wish extends MariaDB.Base {
 		Description: Creates a wish.
 		Parameters:
 			- wishlist_id: number
-			- category_id: number
-			- item: string
-			- misc: string
-			- price: number
-			- link: string
+			- wish_name: string
+			- wish_price: number
+			- wish_link: string
 	*/
 	public async create(
 		wishlist_id: number,
-		category_id: number,
-		item: string,
-		misc: string,
-		price: number,
-		link: string
+		wish_name: string,
+		wish_price: number,
+		wish_link: string
 	): Promise<any | undefined> {
 		try {
 			// Query the database
 			const result = await this.connector.preparedQuery(
-				"INSERT INTO wishes (wishlist_id, category_id, item, misc, price, link, NOW()) VALUES (?, ?, ?, ?, ?, ?, ?)",
-				[wishlist_id, category_id, item, misc, price, link]
+				"INSERT INTO wishes (wishlist_id, wish_name, wish_price, wish_link, wish_last_updated) VALUES (?, ?, ?, ?, NOW())",
+				[wishlist_id, wish_name, wish_price, wish_link]
 			);
+
+			// Remove n from insertId
+			result.insertId = Number(result.insertId);
 
 			// Return the result
 			return result;
@@ -86,27 +111,26 @@ class Wish extends MariaDB.Base {
 		Parameters:
 			- wishlist_id: number
 			- wish_id: number
-			- category_id: number
-			- item: string
-			- misc: string
-			- price: number
-			- link: string
+			- wish_name: string
+			- wish_price: number
+			- wish_link: string
 	*/
 	public async update(
 		wishlist_id: number,
 		wish_id: number,
-		category_id: number,
-		item: string,
-		misc: string,
-		price: number,
-		link: string
+		wish_name: string,
+		wish_price: number,
+		wish_link: string
 	): Promise<any | undefined> {
 		try {
 			// Query the database
 			const result = await this.connector.preparedQuery(
-				"UPDATE wishes SET category_id = ?, item = ?, misc = ?, price = ?, link = ?, NOW() WHERE wishlist_id = ? AND wish_id = ?",
-				[category_id, item, misc, price, link, wishlist_id, wish_id]
+				"UPDATE wishes SET wish_name = ?, wish_price = ?, wish_link = ?, wish_last_updated = NOW() WHERE wishlist_id = ? AND wish_id = ?",
+				[wish_name, wish_price, wish_link, wishlist_id, wish_id]
 			);
+
+			// Remove n from insertId
+			result.insertId = Number(result.insertId);
 
 			// Return the result
 			return result;
@@ -134,6 +158,9 @@ class Wish extends MariaDB.Base {
 				[wishlist_id, wish_id]
 			);
 
+			// Remove n from insertId
+			result.insertId = Number(result.insertId);
+
 			// Return the result
 			return result;
 		} catch (error) {
@@ -152,7 +179,7 @@ class Wish extends MariaDB.Base {
 			- wishlist_id: number
 			- wish_id: number
 	*/
-	public async exists(wishlist_id: number, wish_id: number): Promise<boolean | undefined> {
+	public async exists(wishlist_id: number, wish_id: number): Promise<boolean> {
 		try {
 			// Query the database
 			const result = await this.connector.preparedQuery(
@@ -167,7 +194,7 @@ class Wish extends MariaDB.Base {
 			console.error(error);
 
 			// Return false
-			return undefined;
+			return false;
 		}
 	}
 }
