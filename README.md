@@ -25,7 +25,8 @@ Vendel Familie Hjemmeside - [V2.Vendel.dk](https://v2.vendel.dk)
 
 Jeg blev nød til at skære ned på mit projekt da tiden løb fra mig.
 Jeg endte med at bruge alt for lang tid på [Routeren](.old/router.ts) og det gik udover mit login system.
-Man kan se mange af resterne fra det originale projekt i [.old](.old) mappen. (f.eks [Routeren](.old/router.ts) som jeg endte med at droppe)
+
+Man kan se mange af resterne fra det originale projekt i [.old](.old) mappen. (f.eks [Routeren](.old/router.ts) som jeg endte med at droppe eller min [session controller](.old/api/src/routes/session.ts) som fungerede men ikke havde et formål uden login systemet)
 
 ## Hvad blev lavet færdigt?
 
