@@ -38,8 +38,6 @@ if (wishlistForm)
 			// Convert the form data to a json object
 			const data = Object.fromEntries(formData);
 
-			console.log(data);
-
 			// Check if the id is set
 			if (data.wishlistId) {
 				console.log("Update wishlist");
