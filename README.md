@@ -42,3 +42,5 @@ Der er meget er projektet som ikke er særlig optimatiseret og helt klart kan bl
 Der er en god del af komponenterne der godt kunne lavet smartere så de kan brugere mere generelt og hvad en bredere funktionalitet.
 
 Dog vil jeg så stadig sige at jeg har opnået basis funktionaliteten af siden og at den "fungere" med det der nu er.
+
+Test
